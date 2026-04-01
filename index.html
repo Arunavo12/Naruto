@@ -45,7 +45,6 @@
       line-height: 1.6;
     }
 
-    /* ── HEADER ─────────────────────────────────────── */
     .header {
       padding: 20px 16px 0;
       max-width: 1400px;
@@ -101,7 +100,6 @@
       font-size: 0.88rem;
     }
 
-    /* Stats row */
     .stats-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -134,7 +132,6 @@
       line-height: 1;
     }
 
-    /* Sync bar */
     .sync-bar {
       display: flex;
       gap: 8px;
@@ -181,7 +178,6 @@
     .dot.connected { background: var(--good); }
     .dot.error { background: var(--danger); }
 
-    /* ── LAYOUT ─────────────────────────────────────── */
     .layout {
       max-width: 1400px;
       margin: 14px auto 60px;
@@ -192,7 +188,6 @@
       align-items: start;
     }
 
-    /* ── SIDEBAR ────────────────────────────────────── */
     .sidebar {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -270,7 +265,6 @@
       transition: width 0.3s ease;
     }
 
-    /* ── MAIN CONTENT ───────────────────────────────── */
     .main {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -303,12 +297,6 @@
 
     .arc-count { color: var(--muted); font-size: 0.85rem; }
 
-    .toolbar-controls {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
     .name-inputs {
       display: flex;
       gap: 8px;
@@ -327,7 +315,6 @@
       flex-wrap: wrap;
     }
 
-    /* ── INPUT / SELECT / BUTTON BASE ──────────────── */
     input[type="text"], select, textarea {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -391,7 +378,6 @@
 
     .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
 
-    /* ── EPISODES GRID ──────────────────────────────── */
     .episodes-grid {
       padding: 14px;
       display: grid;
@@ -443,8 +429,51 @@
       color: var(--accent2);
     }
 
-    /* ── RATING BLOCKS ──────────────────────────────── */
-    .rating-blocks { padding: 0 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+    .ep-card.filler {
+      border-color: rgba(239,68,68,0.25);
+      background: linear-gradient(180deg, rgba(239,68,68,0.07), rgba(239,68,68,0.03));
+    }
+
+    .ep-card.partial-filler {
+      border-color: rgba(234,179,8,0.25);
+      background: linear-gradient(180deg, rgba(234,179,8,0.07), rgba(234,179,8,0.03));
+    }
+
+    .filler-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .filler-badge.full {
+      background: rgba(239,68,68,0.15);
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+
+    .filler-badge.partial {
+      background: rgba(234,179,8,0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(234,179,8,0.28);
+    }
+
+    .ep-card.filler .ep-num { color: #f87171; }
+    .ep-card.partial-filler .ep-num { color: #fbbf24; }
+
+    .rating-blocks {
+      padding: 0 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
     .rblock {
       border-radius: 12px;
@@ -480,7 +509,12 @@
       font-weight: 700;
     }
 
-    .stars-row { display: flex; gap: 3px; margin-bottom: 6px; flex-wrap: wrap; }
+    .stars-row {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
 
     .star {
       background: transparent;
@@ -496,7 +530,6 @@
 
     .star:hover { transform: scale(1.15); }
     .star.filled { color: var(--accent2); }
-    .star:hover { filter: none; transform: scale(1.15); }
 
     .rblock-actions {
       display: flex;
@@ -527,9 +560,9 @@
       margin-top: 4px;
       font-style: italic;
       min-height: 14px;
+      word-break: break-word;
     }
 
-    /* ── EPISODE FOOTER ─────────────────────────────── */
     .ep-footer {
       padding: 8px 14px 12px;
       display: flex;
@@ -544,7 +577,6 @@
       color: var(--muted);
     }
 
-    /* ── EMPTY / LOADING ───────────────────────────── */
     .empty-state, .loading-state {
       grid-column: 1 / -1;
       padding: 40px 20px;
@@ -554,7 +586,6 @@
       border-radius: var(--r);
     }
 
-    /* ── MOBILE OVERLAY NAV ─────────────────────────── */
     .mobile-nav-trigger {
       display: none;
       position: fixed;
@@ -608,7 +639,6 @@
       flex: 1;
     }
 
-    /* ── FOOTER ─────────────────────────────────────── */
     .main-footer {
       padding: 12px 16px;
       border-top: 1px solid var(--border);
@@ -621,7 +651,6 @@
       gap: 8px;
     }
 
-    /* ── RESPONSIVE ─────────────────────────────────── */
     @media (max-width: 900px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar { display: none; }
@@ -633,7 +662,6 @@
       .stats-row { grid-template-columns: repeat(2, 1fr); }
       .stats-row .stat:last-child { display: none; }
       .episodes-grid { grid-template-columns: 1fr; padding: 10px; gap: 10px; }
-      .toolbar-controls { width: 100%; }
       .name-inputs input { max-width: none; flex-basis: calc(50% - 4px); }
       .filter-row { width: 100%; }
       .filter-row select { flex: 1; }
@@ -643,7 +671,6 @@
       .sync-bar input[type="text"] { width: 100%; }
     }
 
-    /* Progress indicator at top */
     .header-progress {
       display: flex;
       gap: 6px;
@@ -674,7 +701,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="header">
     <div class="header-inner">
       <div class="header-top">
@@ -685,11 +711,24 @@
             <p class="subtitle">Shared live ratings for Novo, Arijit & Eric</p>
           </div>
         </div>
+
         <div class="header-progress" style="flex:1; max-width:300px; align-self:center;">
           <div class="header-progress-bar">
             <div class="header-progress-fill" id="globalProgress" style="width:0%"></div>
           </div>
           <span class="header-progress-label" id="globalProgressLabel">0 / 220 rated</span>
+        </div>
+
+        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;color:#7a82a0;">
+            <span style="width:10px;height:10px;border-radius:3px;background:rgba(239,68,68,0.5);display:inline-block;"></span>Filler
+          </span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;color:#7a82a0;">
+            <span style="width:10px;height:10px;border-radius:3px;background:rgba(234,179,8,0.5);display:inline-block;"></span>Partial
+          </span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;color:#7a82a0;">
+            <span style="width:10px;height:10px;border-radius:3px;background:rgba(255,255,255,0.12);display:inline-block;"></span>Canon
+          </span>
         </div>
       </div>
 
@@ -728,10 +767,7 @@
     </div>
   </header>
 
-  <!-- MAIN LAYOUT -->
   <div class="layout">
-
-    <!-- SIDEBAR (desktop) -->
     <aside class="sidebar">
       <div class="sidebar-head">
         <h2>Story Arcs</h2>
@@ -750,6 +786,9 @@
           <option value="all">All episodes</option>
           <option value="rated">Rated only</option>
           <option value="unrated">Unrated only</option>
+          <option value="canon">Canon only</option>
+          <option value="filler">Filler only</option>
+          <option value="partial">Partial filler only</option>
           <option value="disagreed">Biggest disagreements</option>
         </select>
         <div style="display:flex; gap:6px;">
@@ -760,7 +799,6 @@
       <div class="arc-list" id="arcList"></div>
     </aside>
 
-    <!-- MAIN PANEL -->
     <main class="main">
       <div class="main-toolbar">
         <div class="main-toolbar-top">
@@ -773,11 +811,13 @@
             <button class="btn-danger btn-sm" id="clearBtn">Clear all</button>
           </div>
         </div>
+
         <div class="name-inputs">
           <input type="text" id="personOneName" placeholder="Person 1 name" />
           <input type="text" id="personTwoName" placeholder="Person 2 name" />
           <input type="text" id="personThreeName" placeholder="Person 3 name" />
         </div>
+
         <div class="filter-row" id="mobileFilters" style="display:none;">
           <input type="text" id="searchInputMobile" placeholder="Search episodes…" style="flex:1;" />
           <select id="sortModeMobile">
@@ -792,6 +832,9 @@
             <option value="all">All</option>
             <option value="rated">Rated</option>
             <option value="unrated">Unrated</option>
+            <option value="canon">Canon</option>
+            <option value="filler">Filler</option>
+            <option value="partial">Partial filler</option>
             <option value="disagreed">Disagreements</option>
           </select>
         </div>
@@ -808,7 +851,6 @@
     </main>
   </div>
 
-  <!-- MOBILE BOTTOM SHEET -->
   <button class="mobile-nav-trigger" id="mobileNavTrigger">☰ Arcs</button>
 
   <div class="mobile-overlay" id="mobileOverlay">
@@ -822,32 +864,48 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
-    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
+    let db = null;
+    let docFn = null;
+    let getDocFn = null;
+    let setDocFn = null;
+    let onSnapshotFn = null;
+    let serverTimestampFn = null;
 
-    const firebaseConfig = {
-      apiKey: 'AIzaSyD0CAmT_PLEIv85NwrdzE7DhwFfg6eg7WE',
-      authDomain: 'naruto-838cf.firebaseapp.com',
-      projectId: 'naruto-838cf',
-      storageBucket: 'naruto-838cf.firebasestorage.app',
-      messagingSenderId: '280791678540',
-      appId: '1:280791678540:web:b60294f53eeb782505bee9',
-      measurementId: 'G-EDH87N1C4W'
-    };
+    async function initFirebase() {
+      try {
+        const appMod = await import('https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js');
+        const fsMod = await import('https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js');
 
-    const app = initializeApp(firebaseConfig);
-    try { getAnalytics(app); } catch {}
-    const db = getFirestore(app);
+        const firebaseConfig = {
+          apiKey: 'AIzaSyD0CAmT_PLEIv85NwrdzE7DhwFfg6eg7WE',
+          authDomain: 'naruto-838cf.firebaseapp.com',
+          projectId: 'naruto-838cf',
+          storageBucket: 'naruto-838cf.firebasestorage.app',
+          messagingSenderId: '280791678540',
+          appId: '1:280791678540:web:b60294f53eeb782505bee9',
+          measurementId: 'G-EDH87N1C4W'
+        };
+
+        const app = appMod.initializeApp(firebaseConfig);
+        db = fsMod.getFirestore(app);
+        docFn = fsMod.doc;
+        getDocFn = fsMod.getDoc;
+        setDocFn = fsMod.setDoc;
+        onSnapshotFn = fsMod.onSnapshot;
+        serverTimestampFn = fsMod.serverTimestamp;
+      } catch (e) {
+        console.warn('Firebase unavailable, running local only:', e);
+      }
+    }
 
     const STORAGE_KEY = 'naruto-shared-ratings-v2';
     const ROOM_KEY = 'naruto-shared-room';
 
     const ARC_DEFS = [
-      { id: 'prologue', name: 'Land of Waves', start: 1, end: 19, description: 'Team 7's first real mission, Zabuza, Haku, and the emotional core.' },
+      { id: 'prologue', name: 'Land of Waves', start: 1, end: 19, description: "Team 7's first real mission, Zabuza, Haku, and the emotional core." },
       { id: 'chunin-exams', name: 'Chunin Exams', start: 20, end: 67, description: 'Written exam, Forest of Death, prelims, training, and tournament chaos.' },
       { id: 'konoha-crush', name: 'Konoha Crush', start: 68, end: 80, description: 'The invasion with Gaara, Orochimaru, and the Third Hokage showdown.' },
-      { id: 'search-for-tsunade', name: 'Search for Tsunade', start: 81, end: 100, description: 'Jiraiya, Tsunade, Kabuto, and Naruto's Rasengan development.' },
+      { id: 'search-for-tsunade', name: 'Search for Tsunade', start: 81, end: 100, description: "Jiraiya, Tsunade, Kabuto, and Naruto's Rasengan development." },
       { id: 'special-missions', name: 'Tea Country', start: 101, end: 106, description: 'The Kakashi face episode and the Land of Tea escort mission.' },
       { id: 'sasuke-recovery', name: 'Sasuke Recovery', start: 107, end: 135, description: 'The Sound Four fights and Naruto vs Sasuke.' },
       { id: 'filler-1', name: 'Filler Missions I', start: 136, end: 160, description: 'Early filler run after the major canon climax.' },
@@ -868,7 +926,10 @@
     let liveMode = false;
     let isMobile = window.innerWidth <= 900;
 
-    window.addEventListener('resize', () => { isMobile = window.innerWidth <= 900; updateMobileFiltersVisibility(); });
+    window.addEventListener('resize', () => {
+      isMobile = window.innerWidth <= 900;
+      updateMobileFiltersVisibility();
+    });
 
     function updateMobileFiltersVisibility() {
       document.getElementById('mobileFilters').style.display = isMobile ? 'flex' : 'none';
@@ -880,15 +941,29 @@
         if (!raw) return structuredClone(defaultState);
         const parsed = JSON.parse(raw);
         return {
-          names: { one: parsed?.names?.one || 'Novo', two: parsed?.names?.two || 'Arijit', three: parsed?.names?.three || 'Eric' },
+          names: {
+            one: parsed?.names?.one || 'Novo',
+            two: parsed?.names?.two || 'Arijit',
+            three: parsed?.names?.three || 'Eric'
+          },
           ratings: parsed?.ratings || {}
         };
-      } catch { return structuredClone(defaultState); }
+      } catch {
+        return structuredClone(defaultState);
+      }
     }
 
-    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-    function loadRoomId() { document.getElementById('roomId').value = localStorage.getItem(ROOM_KEY) || 'naruto-boys'; }
-    function saveRoomId() { localStorage.setItem(ROOM_KEY, document.getElementById('roomId').value.trim()); }
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadRoomId() {
+      document.getElementById('roomId').value = localStorage.getItem(ROOM_KEY) || 'naruto-boys';
+    }
+
+    function saveRoomId() {
+      localStorage.setItem(ROOM_KEY, document.getElementById('roomId').value.trim());
+    }
 
     function setStatus(type, text) {
       document.getElementById('statusText').textContent = text;
@@ -900,7 +975,14 @@
 
     function getEpisodeData(id) {
       if (!state.ratings[id]) {
-        state.ratings[id] = { one: 0, two: 0, three: 0, noteOne: '', noteTwo: '', noteThree: '' };
+        state.ratings[id] = {
+          one: 0,
+          two: 0,
+          three: 0,
+          noteOne: '',
+          noteTwo: '',
+          noteThree: ''
+        };
       }
       return state.ratings[id];
     }
@@ -924,14 +1006,22 @@
     }
 
     function esc(str) {
-      return String(str ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
     }
 
-    function getArcById(id) { return ARC_DEFS.find(a => a.id === id); }
+    function getArcById(id) {
+      return ARC_DEFS.find(a => a.id === id);
+    }
 
     function getEpisodesForArc(arcId) {
       const arc = getArcById(arcId);
-      return episodes.filter(ep => ep.number >= arc.start && ep.number <= arc.end).map(ep => ({ ...ep, arcId, arcName: arc.name }));
+      return episodes
+        .filter(ep => ep.number >= arc.start && ep.number <= arc.end)
+        .map(ep => ({ ...ep, arcId, arcName: arc.name }));
     }
 
     function getSearchValue() {
@@ -941,56 +1031,69 @@
     }
 
     function getSortValue() {
-      return isMobile ? document.getElementById('sortModeMobile').value : document.getElementById('sortMode').value;
+      return isMobile
+        ? document.getElementById('sortModeMobile').value
+        : document.getElementById('sortMode').value;
     }
 
     function getFilterValue() {
-      return isMobile ? document.getElementById('filterModeMobile').value : document.getElementById('filterMode').value;
+      return isMobile
+        ? document.getElementById('filterModeMobile').value
+        : document.getElementById('filterMode').value;
     }
 
-    async function loadRealEpisodeTitles() {
-      try {
-        const res = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=List_of_Naruto_episodes&prop=text&format=json&origin=*');
-        const data = await res.json();
-        const html = data?.parse?.text?.['*'];
-        if (!html) throw new Error('No episode HTML found');
-        const domDoc = new DOMParser().parseFromString(html, 'text/html');
-        const rows = [...domDoc.querySelectorAll('tr')];
-        const found = [];
-        for (const row of rows) {
-          const text = row.textContent.replace(/\s+/g, ' ').trim();
-          const match = text.match(/^(\d+)\s+(\d+)\s+"([^"]+)"/);
-          if (!match) continue;
-          const number = Number(match[1]);
-          const title = match[3].trim();
-          if (!Number.isFinite(number) || !title) continue;
-          if (!found.some(ep => ep.number === number)) found.push({ id: `ep-${number}`, number, title });
-        }
-        found.sort((a, b) => a.number - b.number);
-        if (found.length < 200) throw new Error(`Only found ${found.length} titles`);
-        episodes = found.slice(0, 220);
-      } catch (error) {
-        console.error(error);
-        episodes = Array.from({ length: 220 }, (_, i) => ({ id: `ep-${i + 1}`, number: i + 1, title: `Naruto Episode ${i + 1}` }));
-        setStatus('error', 'Using fallback titles');
-      }
+    function loadRealEpisodeTitles() {
+      const RAW = [
+        [1,'Enter: Naruto Uzumaki!','canon'],[2,'My Name is Konohamaru!','canon'],[3,'Sasuke and Sakura: Friends or Foes?','canon'],[4,'Pass or Fail: Survival Test','canon'],[5,"You Failed! Kakashi's Final Decision",'canon'],[6,'A Dangerous Mission! Journey to the Land of Waves!','canon'],[7,'The Assassin of the Mist!','partial'],[8,'The Oath of Pain','canon'],[9,'Kakashi: Sharingan Warrior','partial'],[10,'The Forest of Chakra','canon'],
+        [11,'The Land Where a Hero Once Lived','canon'],[12,'Battle on the Bridge! Zabuza Returns!!','canon'],[13,"Haku's Secret Jutsu: Crystal Ice Mirrors",'canon'],[14,'The Number One Hyperactive, Knucklehead Ninja Joins the Fight!!','partial'],[15,'Zero Visibility: The Sharingan Shatters','partial'],[16,'The Broken Seal','partial'],[17,'White Past: Hidden Ambition','canon'],[18,'The Weapons Known as Shinobi','partial'],[19,'The Demon in the Snow','partial'],[20,'A New Chapter Begins: The Chunin Exam!','partial'],
+        [21,'Identify Yourself: Powerful New Rivals','partial'],[22,'Chunin Challenge: Rock Lee vs. Sasuke!','canon'],[23,'Genin Takedown! All Nine Rookies Face Off!','partial'],[24,'Start Your Engines: The Chunin Exam Begins!','partial'],[25,'The Tenth Question: All or Nothing!','canon'],[26,'Special Report: Live from the Forest of Death!','filler'],[27,'The Chunin Exam Stage 2: The Forest of Death','partial'],[28,'Eat or be Eaten: Panic in the Forest','partial'],[29,"Naruto's Counterattack: Never Give In!",'partial'],[30,'The Sharingan Revived: Dragon-Flame Jutsu!','partial'],
+        [31,"Bushy Brow's Pledge: Undying Love and Protection!",'canon'],[32,'Sakura Blossoms!','canon'],[33,'Battle Formation: Ino-Shika-Cho!','canon'],[34,"Akamaru Trembles: Gaara's Cruel Strength!",'canon'],[35,"The Scroll's Secret: No Peeking Allowed",'canon'],[36,'Clone vs. Clone: Mine are Better than Yours!','canon'],[37,'Surviving the Cut! The Rookie Nine Together Again!','partial'],[38,'Narrowing the Field: Sudden Death Elimination!','partial'],[39,"Bushy Brow's Jealousy: Lions Barrage Unleashed!",'partial'],[40,'Kakashi and Orochimaru: Face-to-Face!','partial'],
+        [41,'Kunoichi Rumble: The Rivals Get Serious!','partial'],[42,'The Ultimate Battle: Cha!','canon'],[43,'Killer Kunoichi and a Shaky Shikamaru','partial'],[44,"Akamaru Unleashed! Who's Top Dog Now?",'partial'],[45,"Surprise Attack! Naruto's Secret Weapon!",'partial'],[46,'Byakugan Battle: Hinata Grows Bold!','partial'],[47,'A Failure Stands Tall!','partial'],[48,'Gaara vs. Rock Lee: The Power of Youth Explodes!','canon'],[49,"Lee's Hidden Strength: Forbidden Secret Jutsu!",'partial'],[50,'The Fifth Gate: A Splendid Ninja is Born','canon'],
+        [51,'A Shadow in Darkness: Danger Approaches Sasuke','canon'],[52,"Ebisu Returns: Naruto's Toughest Training Yet!",'partial'],[53,'Long Time No See: Jiraiya Returns!','partial'],[54,'The Summoning Jutsu: Wisdom of the Toad Sage!','partial'],[55,'A Feeling of Yearning, A Flower Full of Hope','partial'],[56,'Live or Die: Risk it All to Win it All!','partial'],[57,'He Flies! He Jumps! He Lurks! Chief Toad Appears!','partial'],[58,'Hospital Besieged: The Evil Hand Revealed!','partial'],[59,'The Final Rounds: Rush to the Battle Arena!','partial'],[60,'Byakugan vs. Shadow Clone','partial'],
+        [61,'Ultimate Defense: Zero Blind Spot!','canon'],[62,"A Failure's True Power",'canon'],[63,'Hit it or Quit it: The Final Rounds Get Complicated!','partial'],[64,'Zero Motivation: The Guy with Cloud Envy!','canon'],[65,'Dancing Leaf, Squirming Sand','canon'],[66,"Bushy Brow's Jutsu: Sasuke Style!",'partial'],[67,'Late for the Show, But Ready to Go! The Ultimate Secret Technique is Born!','canon'],[68,'Zero Hour! The Destruction of the Hidden Leaf Village Begins!','canon'],[69,'Village in Distress: A New A-Ranked Mission!','partial'],[70,"A Shirker's Call to Action: A Layabout No More!",'partial'],
+        [71,'An Unrivaled Match: Hokage Battle Royale!','partial'],[72,'A Mistake from the Past: A Face Revealed!','partial'],[73,'Forbidden Secret Technique: Reaper Death Seal!','canon'],[74,"Astonishing Truth! Gaara's Identity Emerges!",'partial'],[75,"Sasuke's Decision: Pushed to the Edge!",'canon'],[76,'Assassin of the Moonlit Night','canon'],[77,'Light vs. Dark: The Two Faces of Gaara','canon'],[78,"Naruto's Ninja Handbook",'canon'],[79,'Beyond the Limit of Darkness and Light','canon'],[80,'The Third Hokage, Forever...','canon'],
+        [81,'Return of the Morning Mist','canon'],[82,'Eye to Eye: Sharingan vs. Sharingan!','canon'],[83,"Jiraiya: Naruto's Potential Disaster!",'partial'],[84,'Roar, Chidori! Brother vs. Brother!','canon'],[85,'Hate Among the Uchihas: The Last of the Clan!','canon'],[86,'A New Training Begins: I Will Be Strong!','canon'],[87,'Keep on Training: Pop Goes the Water Balloon!','canon'],[88,'Focal Point: The Mark of the Leaf','canon'],[89,"An Impossible Choice: The Pain Within Tsunade's Heart",'canon'],[90,'Unforgivable! A Total Lack of Respect!','canon'],
+        [91,'Inheritence! The Necklace of Death!','canon'],[92,"A Dubious Offer! Tsunade's Choice!",'canon'],[93,'Breakdown! The Deal is Off!','canon'],[94,'Attack! Fury of the Rasengan!','canon'],[95,'The Fifth Hokage! A Life on the Line!','canon'],[96,'Deadlock! Sannin Showdown!','canon'],[97,"Kidnapped! Naruto's Hot Spring Adventure!",'filler'],[98,'Tsunade’s Warning: Ninja No More!','partial'],[99,'The Will of Fire Still Burns!','partial'],[100,'Sensei and Student: The Bond of the Shinobi','partial'],
+        [101,"Gotta See! Gotta Know! Kakashi-Sensei's True Face!",'filler'],[102,'Mission: Help an Old Friend in the Land of Tea','filler'],[103,'The Race is on! Trouble on the High Seas!','filler'],[104,'Run Idate Run! Nagi Island Awaits!','filler'],[105,'A Fierce Battle of Rolling Thunder!','filler'],[106,'The Last Leg: A Final Act of Desperation','filler'],[107,'The Battle Begins: Naruto vs. Sasuke','canon'],[108,'Bitter Rivals and Broken Bonds','canon'],[109,'An Invitation from the Sound','canon'],[110,'Formation! The Sasuke Retrieval Squad','canon'],
+        [111,'Sound vs. Leaf','canon'],[112,'Squad Mutiny: Everything Falls Apart!','partial'],[113,'Full Throttle Power! Choji, Ablaze!','partial'],[114,"Good-bye Old Friend...! I'll Always Believe in You!",'partial'],[115,'Your Opponent Is Me!','canon'],[116,"360 Degrees of Vision: The Byakugan's Blind Spot",'canon'],[117,'Losing is Not an Option!','canon'],[118,'The Vessel Arrives Too Late','canon'],[119,'Miscalculation: A New Enemy Appears!','canon'],[120,'Roar and Howl! The Ultimate Tag Team','canon'],
+        [121,'To Each His Own Battle','canon'],[122,"Fakeout: Shikamaru's Comeback!",'canon'],[123,"The Leaf's Handsome Devil!",'canon'],[124,'The Beast Within','canon'],[125,'The Sand Shinobi: Allies of the Leaf','canon'],[126,'Showdown: Gaara vs. Kimimaro!','partial'],[127,'Vengeful Strike! The Bracken Dance','partial'],[128,'A Cry on Deaf Ears','canon'],[129,'Brothers: Distance Among the Uchiha','canon'],[130,'Father and Son, the Broken Crest','partial'],
+        [131,'The Secrets of the Mangekyo Sharingan!','partial'],[132,'For a Friend','canon'],[133,'A Plea From a Friend','canon'],[134,'The End of Tears','canon'],[135,'The Promise That Could Not Be Kept','canon'],[136,'Deep Cover!? A Super S-Ranked Mission!','filler'],[137,'A Town of Outlaws, the Shadow of the Fuma Clan','filler'],[138,'Pure Betrayal, and a Fleeting Plea!','filler'],[139,'Pure Terror! The House of Orochimaru','filler'],[140,"Two Heartbeats: Kabuto's Trap",'filler'],
+        [141,"Sakura's Determination",'partial'],[142,'The Three Villains from the Maximum Security Prison','partial'],[143,"Tonton! I'm Counting on You!",'filler'],[144,'A New Squad! Two People and a Dog?!','filler'],[145,'A New Formation: Ino-Shika-Cho!','filler'],[146,"Orochimaru's Shadow",'filler'],[147,"A Clash of Fate: You Can't Bring Me Down",'filler'],[148,'Search for the Rare Bikochu Beetle','filler'],[149,"What's the Difference? Don't All Insects Look Alike?",'filler'],[150,'A Battle of Bugs: The Deceivers and the Deceived','filler'],
+        [151,'Blaze Away Byakugan: This Is My Ninja Way','filler'],[152,'Funeral March for the Living','filler'],[153,'A Lesson Learned: The Iron Fist of Love','filler'],[154,'The Enemy of the Byakugan','filler'],[155,'The Dark Creeping Clouds','filler'],[156,"Raiga's Counterattack",'filler'],[157,'Run! The Curry of Life','filler'],[158,'Follow My Lead! The Great Survival Challenge','filler'],[159,'Bounty Hunter from the Wilderness','filler'],[160,'Hunt or Be Hunted?! Showdown at the O.K. Temple!','filler'],
+        [161,'The Appearance of Strange Visitors','filler'],[162,'The Cursed Warrior','filler'],[163,"The Tactician's Intent",'filler'],[164,'Too Late for Help','filler'],[165,'The Death of Naruto','filler'],[166,'When Time Stands Still','filler'],[167,'When Egrets Flap Their Wings','filler'],[168,'Mix It, Stretch It, Boil It Up! Burn, Copper Pot, Burn!','filler'],[169,'Remembrance: The Lost Page','filler'],[170,'The Closed Door','filler'],
+        [171,'Infiltration: The Set-Up!','filler'],[172,'Despair: A Fractured Heart','filler'],[173,'The Battle at Sea: The Power Unleashed!','filler'],[174,'Impossible! Celebrity Ninja Art - Money Style Jutsu!','filler'],[175,'The Treasure Hunt is On!','filler'],[176,'Run, Dodge, Zigzag! Chase or Be Chased!','filler'],[177,'Please, Mr. Postman!','filler'],[178,"Encounter! The Boy with a Star's Name",'filler'],[179,'The Remembered Lullaby','filler'],[180,'Hidden Jutsu: The Price of The Ninja Art: Kujaku','filler'],
+        [181,'Hoshikage, The Buried Truth','filler'],[182,'Reunion, The Remaining time','filler'],[183,"The Star's Radiance",'filler'],[184,"Kiba's Long Day!",'filler'],[185,'A Legend from the Hidden Leaf: The Onbaa!','filler'],[186,'Laughing Shino','filler'],[187,'Open for Business! The Leaf Moving Service','filler'],[188,'Mystery of the Targeted Merchants','filler'],[189,'A Limitless Supply of Ninja Tools','filler'],[190,'The Byakugan Sees the Blind Spot','filler'],
+        [191,'Forecast: Death! Cloudy with Chance of Sun','filler'],[192,'Ino Screams! Chubby Paradise!','filler'],[193,'Viva Dojo Challenge! Youth Is All About Passion!','filler'],[194,'The Mysterious Curse of the Haunted Castle','filler'],[195,'The Third Super-Beast!','filler'],[196,'Hot-Blooded Confrontation: Student vs. Sensei','filler'],[197,'Crisis! The Hidden Leaf 11 Gather!','filler'],[198,"The ANBU Gives Up? Naruto's Recollection",'filler'],[199,'The Missed Target','filler'],[200,'The Powerful Helper','filler'],
+        [201,'Multiple Traps! Countdown to Destruction','filler'],[202,'The Top 5 Ninja Battles','filler'],[203,"Kurenai's Decision, Squad 8 Left Behind",'filler'],[204,"Yakumo's Sealed Ability",'filler'],[205,"Kurenai's Top-Secret Mission: The Promise With the Third Hokage",'filler'],[206,'Genjutsu or Reality?','filler'],[207,'The Supposed Sealed Ability','filler'],[208,'The Weight of the Prized Artifact!','filler'],[209,'The Enemy: Ninja Dropouts','filler'],[210,'The Bewildering Forest','filler'],
+        [211,'Memory of Flames','filler'],[212,'To Each His Own Path','filler'],[213,'Vanished Memories','filler'],[214,'Bringing Back Reality','filler'],[215,'A Past to Be Erased','filler'],[216,'The Targeted Shukaku','filler'],[217,'Sand Alliance with the Leaf Shinobi','filler'],[218,'The Counterattack!','filler'],[219,'The Ultimate Weapon Reborn','filler'],[220,'Departure','partial'],
+      ];
+
+      episodes = RAW.map(([number, title, fillerStatus]) => ({
+        id: `ep-${number}`,
+        number,
+        title,
+        fillerStatus
+      }));
     }
 
     function renderStats() {
       document.getElementById('loadedCount').textContent = episodes.length;
+
       const ratedEps = episodes.filter(ep => {
         const d = getEpisodeData(ep.id);
         return d.one > 0 || d.two > 0 || d.three > 0;
       });
+
       document.getElementById('ratedCount').textContent = ratedEps.length;
 
-      const pct = episodes.length ? Math.round(ratedEps.length / episodes.length * 100) : 0;
+      const pct = episodes.length ? Math.round((ratedEps.length / episodes.length) * 100) : 0;
       document.getElementById('globalProgress').style.width = pct + '%';
       document.getElementById('globalProgressLabel').textContent = `${ratedEps.length} / ${episodes.length} rated`;
 
       const n1 = state.names.one || 'Novo';
       const n2 = state.names.two || 'Arijit';
       const n3 = state.names.three || 'Eric';
+
       document.getElementById('novoAvgLabel').textContent = n1 + ' avg';
       document.getElementById('arijitAvgLabel').textContent = n2 + ' avg';
       document.getElementById('ericAvgLabel').textContent = n3 + ' avg';
@@ -998,6 +1101,7 @@
       const avg1 = average(episodes.map(ep => getEpisodeData(ep.id).one));
       const avg2 = average(episodes.map(ep => getEpisodeData(ep.id).two));
       const avg3 = average(episodes.map(ep => getEpisodeData(ep.id).three));
+
       document.getElementById('personOneAverage').textContent = avg1 != null ? avg1.toFixed(1) : '—';
       document.getElementById('personTwoAverage').textContent = avg2 != null ? avg2.toFixed(1) : '—';
       document.getElementById('personThreeAverage').textContent = avg3 != null ? avg3.toFixed(1) : '—';
@@ -1010,13 +1114,17 @@
           const d = getEpisodeData(ep.id);
           return d.one > 0 || d.two > 0 || d.three > 0;
         }).length;
-        const pct = arcEps.length ? (rated / arcEps.length * 100).toFixed(0) : 0;
+        const pct = arcEps.length ? (rated / arcEps.length) * 100 : 0;
+
         return `
           <button class="arc-btn ${selectedArcId === arc.id ? 'active' : ''}" data-arc-id="${arc.id}">
             <span class="arc-name">${esc(arc.name)}</span>
             <span class="arc-meta">Ep ${arc.start}–${arc.end} · ${rated}/${arcEps.length} rated</span>
-            <div class="arc-progress"><div class="arc-progress-fill" style="width:${pct}%"></div></div>
-          </button>`;
+            <div class="arc-progress">
+              <div class="arc-progress-fill" style="width:${pct}%"></div>
+            </div>
+          </button>
+        `;
       }).join('');
 
       container.querySelectorAll('.arc-btn').forEach(btn => {
@@ -1034,13 +1142,24 @@
       const sort = getSortValue();
 
       let result = list.filter(ep => {
-        const matchSearch = !query || ep.title.toLowerCase().includes(query) || ep.arcName.toLowerCase().includes(query) || String(ep.number).includes(query);
+        const matchSearch =
+          !query ||
+          ep.title.toLowerCase().includes(query) ||
+          ep.arcName.toLowerCase().includes(query) ||
+          String(ep.number).includes(query);
+
         if (!matchSearch) return false;
+
         const d = getEpisodeData(ep.id);
         const isRated = d.one > 0 || d.two > 0 || d.three > 0;
+
         if (filter === 'rated') return isRated;
         if (filter === 'unrated') return !isRated;
+        if (filter === 'canon') return ep.fillerStatus === 'canon';
+        if (filter === 'filler') return ep.fillerStatus === 'filler';
+        if (filter === 'partial') return ep.fillerStatus === 'partial';
         if (filter === 'disagreed') return getDisagreement(ep.id) > 0;
+
         return true;
       });
 
@@ -1054,7 +1173,10 @@
         return 0;
       });
 
-      if (filter === 'disagreed') result.sort((a, b) => getDisagreement(b.id) - getDisagreement(a.id));
+      if (filter === 'disagreed') {
+        result.sort((a, b) => getDisagreement(b.id) - getDisagreement(a.id));
+      }
+
       return result;
     }
 
@@ -1064,6 +1186,26 @@
         html += `<button class="star ${i <= value ? 'filled' : ''}" data-episode-id="${episodeId}" data-person="${person}" data-value="${i}">★</button>`;
       }
       return html;
+    }
+
+    function renderRatingBlock(epId, person, cls, name, starVal, textareaVal, savedNote) {
+      return `
+        <div class="rblock ${cls}">
+          <div class="rblock-top">
+            <span class="rblock-name">${name}</span>
+            <span class="rblock-score">${starVal ? starVal + '/5' : '—'}</span>
+          </div>
+          <div class="stars-row">${createStars(starVal, epId, person)}</div>
+          <button class="btn-secondary btn-sm submit-rating-btn" data-episode-id="${epId}" data-person="${person}">Submit rating</button>
+          <div class="rblock-actions" style="margin-top:6px;">
+            <textarea data-person-note="${epId}-${person}" placeholder="${name}'s note…">${esc(textareaVal)}</textarea>
+            <div class="rblock-actions-col">
+              <button class="btn-secondary btn-sm submit-note-btn" data-episode-id="${epId}" data-person="${person}">Save note</button>
+            </div>
+          </div>
+          <div class="note-preview">${savedNote ? esc(savedNote) : 'No note yet'}</div>
+        </div>
+      `;
     }
 
     function renderEpisodes() {
@@ -1087,55 +1229,54 @@
         const d = getEpisodeData(ep.id);
         const joint = getJoint(ep.id);
         const dis = getDisagreement(ep.id);
+
+        const fillerClass =
+          ep.fillerStatus === 'filler'
+            ? 'filler'
+            : ep.fillerStatus === 'partial'
+            ? 'partial-filler'
+            : '';
+
+        const fillerBadge =
+          ep.fillerStatus === 'filler'
+            ? `<span class="filler-badge full">⚠ Filler</span>`
+            : ep.fillerStatus === 'partial'
+            ? `<span class="filler-badge partial">~ Partial filler</span>`
+            : '';
+
         return `
-          <article class="ep-card">
+          <article class="ep-card ${fillerClass}">
             <div class="ep-header">
               <div>
                 <div class="ep-num">Episode ${ep.number}</div>
                 <div class="ep-title">${esc(ep.title)}</div>
+                ${fillerBadge}
               </div>
               <div class="ep-avg">${joint != null ? joint.toFixed(1) + '★' : '—'}</div>
             </div>
 
             <div class="rating-blocks">
-              ${renderRatingBlock(ep.id, 'one', 'novo', n1, d.pending?.one || d.one, d.pendingNotes?.one ?? d.noteOne ?? '', d.noteOne)}
-              ${renderRatingBlock(ep.id, 'two', 'arijit', n2, d.pending?.two || d.two, d.pendingNotes?.two ?? d.noteTwo ?? '', d.noteTwo)}
-              ${renderRatingBlock(ep.id, 'three', 'eric', n3, d.pending?.three || d.three, d.pendingNotes?.three ?? d.noteThree ?? '', d.noteThree)}
+              ${renderRatingBlock(ep.id, 'one', 'novo', n1, d.pending?.one || d.one, d.noteOne || '', d.noteOne)}
+              ${renderRatingBlock(ep.id, 'two', 'arijit', n2, d.pending?.two || d.two, d.noteTwo || '', d.noteTwo)}
+              ${renderRatingBlock(ep.id, 'three', 'eric', n3, d.pending?.three || d.three, d.noteThree || '', d.noteThree)}
             </div>
 
             <div class="ep-footer">
               <span class="spread-badge">${dis >= 0 ? `Spread: ${dis.toFixed(1)}★` : 'Rate 2+ to compare'}</span>
               <button class="btn-success btn-sm reset-episode-btn" data-episode-id="${ep.id}">Reset</button>
             </div>
-          </article>`;
+          </article>
+        `;
       }).join('');
 
       bindEpisodeEvents();
-    }
-
-    function renderRatingBlock(epId, person, cls, name, starVal, textareaVal, savedNote) {
-      return `
-        <div class="rblock ${cls}">
-          <div class="rblock-top">
-            <span class="rblock-name">${name}</span>
-            <span class="rblock-score">${starVal ? starVal + '/5' : '—'}</span>
-          </div>
-          <div class="stars-row">${createStars(starVal, epId, person)}</div>
-          <button class="btn-secondary btn-sm submit-rating-btn" data-episode-id="${epId}" data-person="${person}">Submit rating</button>
-          <div class="rblock-actions" style="margin-top:6px;">
-            <textarea data-person-note="${epId}-${person}" placeholder="${name}'s note…">${esc(textareaVal)}</textarea>
-            <div class="rblock-actions-col">
-              <button class="btn-secondary btn-sm submit-note-btn" data-episode-id="${epId}" data-person="${person}">Save note</button>
-            </div>
-          </div>
-          <div class="note-preview">${savedNote ? esc(savedNote) : 'No note yet'}</div>
-        </div>`;
     }
 
     function renderAll() {
       document.getElementById('personOneName').value = state.names.one;
       document.getElementById('personTwoName').value = state.names.two;
       document.getElementById('personThreeName').value = state.names.three;
+
       renderStats();
       renderArcListInto(document.getElementById('arcList'));
       renderArcListInto(document.getElementById('mobileArcList'));
@@ -1150,8 +1291,10 @@
           const person = star.dataset.person;
           const value = Number(star.dataset.value);
           const data = getEpisodeData(id);
+
           if (!data.pending) data.pending = {};
           data.pending[person] = value;
+
           renderAll();
         });
       });
@@ -1161,9 +1304,12 @@
           const id = btn.dataset.episodeId;
           const person = btn.dataset.person;
           const data = getEpisodeData(id);
+
           if (!data.pending || !data.pending[person]) return;
+
           data[person] = data.pending[person];
           delete data.pending[person];
+
           await syncState();
           renderAll();
         });
@@ -1176,9 +1322,11 @@
           const data = getEpisodeData(id);
           const textarea = document.querySelector(`[data-person-note="${id}-${person}"]`);
           const value = textarea.value.trim();
+
           if (person === 'one') data.noteOne = value;
           if (person === 'two') data.noteTwo = value;
           if (person === 'three') data.noteThree = value;
+
           await syncState();
           renderAll();
         });
@@ -1186,7 +1334,14 @@
 
       document.querySelectorAll('.reset-episode-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-          state.ratings[btn.dataset.episodeId] = { one: 0, two: 0, three: 0, noteOne: '', noteTwo: '', noteThree: '' };
+          state.ratings[btn.dataset.episodeId] = {
+            one: 0,
+            two: 0,
+            three: 0,
+            noteOne: '',
+            noteTwo: '',
+            noteThree: ''
+          };
           await syncState();
           renderAll();
         });
@@ -1195,30 +1350,60 @@
 
     async function syncState() {
       saveState();
-      if (liveMode && roomRef) {
-        await setDoc(roomRef, { state, updatedAt: serverTimestamp() }, { merge: true });
+
+      if (liveMode && roomRef && setDocFn && serverTimestampFn) {
+        await setDocFn(roomRef, { state, updatedAt: serverTimestampFn() }, { merge: true });
       }
     }
 
     async function connectLiveSync() {
+      if (!db) {
+        setStatus('error', 'Firebase unavailable');
+        alert('Firebase could not load. Ratings are saved locally only.');
+        return;
+      }
+
       const roomId = document.getElementById('roomId').value.trim();
-      if (!roomId) { setStatus('error', 'No room ID'); return; }
+      if (!roomId) {
+        setStatus('error', 'No room ID');
+        return;
+      }
+
       try {
         if (unsubscribe) unsubscribe();
-        roomRef = doc(db, 'narutoRooms', roomId);
+
+        roomRef = docFn(db, 'narutoRooms', roomId);
         liveMode = true;
         saveRoomId();
-        const existing = await getDoc(roomRef);
-        if (!existing.exists()) await setDoc(roomRef, { state, updatedAt: serverTimestamp() });
-        unsubscribe = onSnapshot(roomRef, snap => {
-          const remote = snap.data()?.state;
-          if (!remote) return;
-          state = {
-            names: { one: remote?.names?.one || 'Novo', two: remote?.names?.two || 'Arijit', three: remote?.names?.three || 'Eric' },
-            ratings: remote?.ratings || {}
-          };
-          renderAll();
-        }, err => { console.error(err); setStatus('error', 'Sync error'); });
+
+        const existing = await getDocFn(roomRef);
+        if (!existing.exists()) {
+          await setDocFn(roomRef, { state, updatedAt: serverTimestampFn() });
+        }
+
+        unsubscribe = onSnapshotFn(
+          roomRef,
+          snap => {
+            const remote = snap.data()?.state;
+            if (!remote) return;
+
+            state = {
+              names: {
+                one: remote?.names?.one || 'Novo',
+                two: remote?.names?.two || 'Arijit',
+                three: remote?.names?.three || 'Eric'
+              },
+              ratings: remote?.ratings || {}
+            };
+
+            renderAll();
+          },
+          err => {
+            console.error(err);
+            setStatus('error', 'Sync error');
+          }
+        );
+
         setStatus('connected', `Live: ${roomId}`);
       } catch (err) {
         console.error(err);
@@ -1229,7 +1414,9 @@
 
     function disconnectLiveSync() {
       if (unsubscribe) unsubscribe();
-      unsubscribe = null; roomRef = null; liveMode = false;
+      unsubscribe = null;
+      roomRef = null;
+      liveMode = false;
       setStatus('local', 'Local mode');
     }
 
@@ -1237,7 +1424,9 @@
       const blob = new Blob([JSON.stringify({ episodes, state }, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = 'naruto-ratings.json'; a.click();
+      a.href = url;
+      a.download = 'naruto-ratings.json';
+      a.click();
       URL.revokeObjectURL(url);
     }
 
@@ -1248,7 +1437,6 @@
       renderAll();
     }
 
-    // Wire up controls
     document.getElementById('searchInput').addEventListener('input', renderAll);
     document.getElementById('searchInputMobile').addEventListener('input', renderAll);
     document.getElementById('sortMode').addEventListener('change', renderAll);
@@ -1267,19 +1455,38 @@
 
     document.getElementById('exportBtn').addEventListener('click', exportRatings);
     document.getElementById('clearBtn').addEventListener('click', clearAllRatings);
-    document.getElementById('firstArcBtn').addEventListener('click', () => { selectedArcId = ARC_DEFS[0].id; renderAll(); });
-    document.getElementById('lastArcBtn').addEventListener('click', () => { selectedArcId = ARC_DEFS[ARC_DEFS.length - 1].id; renderAll(); });
+    document.getElementById('firstArcBtn').addEventListener('click', () => {
+      selectedArcId = ARC_DEFS[0].id;
+      renderAll();
+    });
+    document.getElementById('lastArcBtn').addEventListener('click', () => {
+      selectedArcId = ARC_DEFS[ARC_DEFS.length - 1].id;
+      renderAll();
+    });
     document.getElementById('connectBtn').addEventListener('click', connectLiveSync);
     document.getElementById('disconnectBtn').addEventListener('click', disconnectLiveSync);
-    document.getElementById('mobileNavTrigger').addEventListener('click', () => document.getElementById('mobileOverlay').classList.add('open'));
-    document.getElementById('mobileOverlayClose').addEventListener('click', () => document.getElementById('mobileOverlay').classList.remove('open'));
-    document.getElementById('mobileOverlay').addEventListener('click', e => { if (e.target === document.getElementById('mobileOverlay')) document.getElementById('mobileOverlay').classList.remove('open'); });
+    document.getElementById('mobileNavTrigger').addEventListener('click', () => {
+      document.getElementById('mobileOverlay').classList.add('open');
+    });
+    document.getElementById('mobileOverlayClose').addEventListener('click', () => {
+      document.getElementById('mobileOverlay').classList.remove('open');
+    });
+    document.getElementById('mobileOverlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('mobileOverlay')) {
+        document.getElementById('mobileOverlay').classList.remove('open');
+      }
+    });
 
-    // Init
-    updateMobileFiltersVisibility();
-    loadRoomId();
-    await loadRealEpisodeTitles();
-    renderAll();
+    async function initApp() {
+      updateMobileFiltersVisibility();
+      loadRoomId();
+      loadRealEpisodeTitles();
+      renderAll();
+      await initFirebase();
+      console.log('Episodes loaded:', episodes.length);
+    }
+
+    initApp();
   </script>
 </body>
 </html>
