@@ -3,918 +3,568 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Naruto Ratings Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <title>Naruto Shared Ratings Hub</title>
   <style>
     :root {
-      --bg: #0c0e15;
-      --surface: #13161f;
-      --surface2: #1a1e2a;
-      --border: rgba(255,255,255,0.07);
-      --border-hover: rgba(255,255,255,0.14);
-      --text: #eef0f8;
-      --muted: #7a82a0;
-      --accent: #f97316;
-      --accent-dim: rgba(249,115,22,0.15);
-      --accent2: #fbbf24;
-      --novo: #f87171;
-      --novo-bg: rgba(248,113,113,0.08);
-      --novo-border: rgba(248,113,113,0.2);
-      --arijit: #60a5fa;
-      --arijit-bg: rgba(96,165,250,0.08);
-      --arijit-border: rgba(96,165,250,0.2);
-      --eric: #34d399;
-      --eric-bg: rgba(52,211,153,0.08);
-      --eric-border: rgba(52,211,153,0.2);
-      --good: #34d399;
-      --danger: #f87171;
-      --r: 16px;
+      --text: #f4f6ff;
+      --muted: #b7bfd8;
+      --accent: #ff8a00;
+      --accent-2: #ffd166;
+      --good: #31d28d;
+      --danger: #ff7b7b;
+      --border: rgba(255,255,255,0.1);
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+      --novo-bg: rgba(255, 90, 90, 0.12);
+      --novo-border: rgba(255, 120, 120, 0.28);
+      --arijit-bg: rgba(90, 140, 255, 0.12);
+      --arijit-border: rgba(120, 165, 255, 0.28);
+      --eric-bg: rgba(49, 210, 141, 0.12);
+      --eric-border: rgba(90, 230, 165, 0.28);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
       color: var(--text);
       min-height: 100vh;
-      font-size: 15px;
-      line-height: 1.6;
+      background:
+        radial-gradient(circle at top right, rgba(255,138,0,0.16), transparent 24%),
+        radial-gradient(circle at top left, rgba(255,209,102,0.08), transparent 20%),
+        linear-gradient(180deg, #0b0e18 0%, #11162a 100%);
     }
 
-    .header {
-      padding: 20px 16px 0;
-      max-width: 1400px;
+    .wrap {
+      max-width: 1550px;
       margin: 0 auto;
+      padding: 26px 18px 60px;
     }
 
-    .header-inner {
-      background: var(--surface);
+    .hero, .panel {
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(255,138,0,0.14), rgba(255,255,255,0.04));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
     }
 
-    .header-top {
+    .hero { padding: 24px; }
+    .panel { overflow: hidden; }
+
+    h1, h2 { margin: 0; line-height: 1.1; }
+    h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); margin-bottom: 10px; }
+    h2 { font-size: clamp(1.15rem, 2vw, 1.55rem); }
+
+    .sub, .small {
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .top-row, .panel-head, .episodes-head {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
+      align-items: flex-start;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
-    .brand {
-      display: flex;
+    .badge, .status-pill, .watch-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .brand-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    h1 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(1.3rem, 4vw, 1.9rem);
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-    }
-
-    .stat {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      min-width: 0;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .stat-value {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 1.4rem;
-      line-height: 1;
-    }
-
-    .sync-bar {
-      display: flex;
       gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .sync-bar input[type="text"] {
-      flex: 1;
-      min-width: 160px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 9px 12px;
-      font: inherit;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    .sync-bar input[type="text"]:focus { border-color: var(--border-hover); }
-
-    .pill-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-radius: 999px;
-      background: var(--surface2);
       border: 1px solid var(--border);
-      font-size: 0.82rem;
+      background: rgba(255,255,255,0.08);
+      font-weight: 700;
       white-space: nowrap;
+    }
+
+    .badge { color: var(--accent-2); }
+
+    .watch-badge {
+      padding: 7px 10px;
+      font-size: 0.8rem;
+    }
+
+    .watch-badge.current-ep {
+      color: #fff2bf;
+      border-color: rgba(255,209,102,0.35);
+      background: rgba(255,209,102,0.1);
+    }
+
+    .watch-badge.watched-ep { color: #d2d8ea; }
+    .watch-badge.next-ep {
+      color: #9ce7bf;
+      border-color: rgba(49,210,141,0.3);
+      background: rgba(49,210,141,0.1);
     }
 
     .dot {
-      width: 7px;
-      height: 7px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: var(--muted);
-      flex-shrink: 0;
+      background: var(--accent-2);
     }
 
     .dot.connected { background: var(--good); }
     .dot.error { background: var(--danger); }
 
-    .layout {
-      max-width: 1400px;
-      margin: 14px auto 60px;
-      padding: 0 16px;
+    .stats {
       display: grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
       gap: 14px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(10,14,27,0.48);
+      border: 1px solid var(--border);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: clamp(1.2rem, 2.5vw, 1.9rem);
+      font-weight: 800;
+    }
+
+    .setup {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      margin-top: 18px;
       align-items: start;
     }
 
-    .sidebar {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      overflow: hidden;
-      position: sticky;
-      top: 14px;
-    }
-
-    .sidebar-head {
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .sidebar-head h2 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-    }
-
-    .sidebar-controls {
-      padding: 12px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .arc-list {
-      max-height: calc(100vh - 320px);
-      overflow-y: auto;
-      padding: 8px;
-    }
-
-    .arc-list::-webkit-scrollbar { width: 3px; }
-    .arc-list::-webkit-scrollbar-track { background: transparent; }
-    .arc-list::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 99px; }
-
-    .arc-btn {
-      width: 100%;
-      text-align: left;
-      background: transparent;
-      color: var(--text);
-      border: 1px solid transparent;
-      border-radius: 12px;
-      padding: 11px 13px;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .arc-btn:hover { background: var(--surface2); border-color: var(--border); }
-    .arc-btn.active {
-      background: var(--accent-dim);
-      border-color: rgba(249,115,22,0.3);
-    }
-
-    .arc-name { font-weight: 500; font-size: 0.88rem; }
-    .arc-meta { color: var(--muted); font-size: 0.78rem; }
-
-    .arc-progress {
-      height: 3px;
-      background: var(--border);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-top: 6px;
-    }
-
-    .arc-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius: 99px;
-      transition: width 0.3s ease;
-    }
-
-    .main {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .main-toolbar {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .main-toolbar-top {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    .arc-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 1.15rem;
-      line-height: 1.2;
-    }
-
-    .arc-count { color: var(--muted); font-size: 0.85rem; }
-
-    .name-inputs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .name-inputs input {
-      flex: 1;
-      min-width: 100px;
-      max-width: 140px;
-    }
-
-    .filter-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .panel-inner, .episodes-wrap { padding: 18px; }
+    .stack { display: grid; gap: 12px; }
 
     input[type="text"], select, textarea {
-      background: var(--surface2);
+      width: 100%;
       border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
       color: var(--text);
-      border-radius: 10px;
-      padding: 8px 11px;
-      font: inherit;
-      font-size: 0.88rem;
+      border-radius: 14px;
+      padding: 12px 13px;
       outline: none;
-      transition: border-color 0.15s;
+      font: inherit;
     }
 
-    input[type="text"]:focus,
-    select:focus,
-    textarea:focus { border-color: var(--border-hover); }
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
 
-    select { cursor: pointer; }
+    .watch-controls {
+      display: grid;
+      grid-template-columns: 180px repeat(4, max-content);
+      gap: 10px;
+      align-items: center;
+      margin: 0 0 18px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
 
     button {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
       border: none;
       cursor: pointer;
       font: inherit;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border-radius: 10px;
-      padding: 8px 12px;
-      transition: all 0.15s;
-      white-space: nowrap;
+      font-weight: 700;
+      border-radius: 14px;
+      padding: 10px 13px;
+      transition: 0.18s ease;
     }
 
-    button:hover { filter: brightness(1.1); transform: translateY(-1px); }
-    button:active { transform: translateY(0); }
+    button:hover { transform: translateY(-1px); }
 
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-secondary {
-      background: var(--surface2);
+    .primary {
+      background: linear-gradient(90deg, var(--accent), #ff6a00);
+      color: white;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.08);
       color: var(--text);
       border: 1px solid var(--border);
     }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
+    .success {
+      background: rgba(49,210,141,0.14);
+      color: #8ef0bf;
+      border: 1px solid rgba(49,210,141,0.3);
+    }
+
+    .danger {
+      background: rgba(255,100,100,0.14);
+      color: #ffbdbd;
+      border: 1px solid rgba(255,100,100,0.28);
+    }
+
+    .arc-list {
+      display: grid;
+      gap: 10px;
+      max-height: 72vh;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .arc-button {
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
       border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      cursor: pointer;
+      transition: 0.18s ease;
     }
 
-    .btn-danger {
-      background: rgba(248,113,113,0.1);
-      color: var(--danger);
-      border: 1px solid rgba(248,113,113,0.2);
+    .arc-button:hover,
+    .arc-button.active {
+      transform: translateY(-1px);
+      background: linear-gradient(145deg, rgba(255,138,0,0.18), rgba(255,255,255,0.08));
+      border-color: rgba(255,209,102,0.35);
     }
 
-    .btn-success {
-      background: rgba(52,211,153,0.1);
-      color: var(--good);
-      border: 1px solid rgba(52,211,153,0.2);
-    }
-
-    .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+    .arc-name { font-weight: 800; margin-bottom: 4px; }
+    .arc-meta { color: var(--muted); font-size: 0.88rem; }
 
     .episodes-grid {
-      padding: 14px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
     }
 
-    .ep-card {
-      background: var(--surface2);
+    .episode-card {
+      scroll-margin-top: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
       border: 1px solid var(--border);
-      border-radius: var(--r);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      border-radius: 22px;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      transition: 0.2s ease;
     }
 
-    .ep-header {
-      padding: 14px 14px 10px;
+    .episode-card.watched {
+      opacity: 0.72;
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    .episode-card.current {
+      border-color: rgba(255,209,102,0.65);
+      box-shadow: 0 0 0 2px rgba(255,209,102,0.18), 0 18px 50px rgba(0,0,0,0.35);
+    }
+
+    .episode-top {
       display: flex;
       justify-content: space-between;
+      gap: 10px;
       align-items: flex-start;
+    }
+
+    .episode-number {
+      color: var(--accent-2);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .episode-title {
+      font-weight: 800;
+      font-size: 1rem;
+      line-height: 1.35;
+      margin-top: 4px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .rating-stack {
+      display: grid;
       gap: 10px;
     }
 
-    .ep-num {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent2);
-      margin-bottom: 4px;
-    }
-
-    .ep-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.92rem;
-      line-height: 1.3;
-    }
-
-    .ep-avg {
-      flex-shrink: 0;
-      background: var(--surface);
+    .rating-box {
+      padding: 11px;
+      border-radius: 16px;
       border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--accent2);
     }
 
-    .ep-card.filler {
-      border-color: rgba(239,68,68,0.25);
-      background: linear-gradient(180deg, rgba(239,68,68,0.07), rgba(239,68,68,0.03));
+    .rating-box.one { background: var(--novo-bg); border-color: var(--novo-border); }
+    .rating-box.two { background: var(--arijit-bg); border-color: var(--arijit-border); }
+    .rating-box.three { background: var(--eric-bg); border-color: var(--eric-border); }
+
+    .rating-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
     }
 
-    .ep-card.partial-filler {
-      border-color: rgba(234,179,8,0.25);
-      background: linear-gradient(180deg, rgba(234,179,8,0.07), rgba(234,179,8,0.03));
+    .rating-value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 8px;
     }
 
-    .filler-badge {
-      display: inline-flex;
-      align-items: center;
+    .star-row {
+      display: flex;
       gap: 4px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      flex-shrink: 0;
-      margin-top: 5px;
-    }
-
-    .filler-badge.full {
-      background: rgba(239,68,68,0.15);
-      color: #f87171;
-      border: 1px solid rgba(239,68,68,0.3);
-    }
-
-    .filler-badge.partial {
-      background: rgba(234,179,8,0.12);
-      color: #fbbf24;
-      border: 1px solid rgba(234,179,8,0.28);
-    }
-
-    .ep-card.filler .ep-num { color: #f87171; }
-    .ep-card.partial-filler .ep-num { color: #fbbf24; }
-
-    .rating-blocks {
-      padding: 0 10px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .rblock {
-      border-radius: 12px;
-      border: 1px solid;
-      padding: 10px 12px;
-    }
-
-    .rblock.novo { background: var(--novo-bg); border-color: var(--novo-border); }
-    .rblock.arijit { background: var(--arijit-bg); border-color: var(--arijit-border); }
-    .rblock.eric { background: var(--eric-bg); border-color: var(--eric-border); }
-
-    .rblock-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-
-    .rblock-name {
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-    }
-
-    .rblock.novo .rblock-name { color: var(--novo); }
-    .rblock.arijit .rblock-name { color: var(--arijit); }
-    .rblock.eric .rblock-name { color: var(--eric); }
-
-    .rblock-score {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
-
-    .stars-row {
-      display: flex;
-      gap: 3px;
-      margin-bottom: 6px;
       flex-wrap: wrap;
+      margin-bottom: 8px;
     }
 
     .star {
       background: transparent;
       border: none;
-      color: rgba(255,255,255,0.15);
-      font-size: 1.2rem;
+      color: #6d748d;
+      font-size: 1.4rem;
       cursor: pointer;
       padding: 0;
       line-height: 1;
-      transition: transform 0.1s, color 0.1s;
-      border-radius: 0;
+      transition: transform 0.12s ease;
     }
 
-    .star:hover { transform: scale(1.15); }
-    .star.filled { color: var(--accent2); }
+    .star:hover { transform: scale(1.08); }
+    .star.filled { color: #ffd166; }
 
-    .rblock-actions {
-      display: flex;
-      gap: 6px;
-      align-items: stretch;
-      flex-wrap: wrap;
-    }
+    .note-text { color: var(--muted); font-size: 0.9rem; }
 
-    .rblock-actions textarea {
-      flex: 1;
-      min-width: 120px;
-      min-height: 52px;
-      resize: vertical;
-      font-size: 0.82rem;
-      padding: 6px 9px;
-      border-radius: 8px;
-    }
-
-    .rblock-actions-col {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .note-preview {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 4px;
-      font-style: italic;
-      min-height: 14px;
-      word-break: break-word;
-    }
-
-    .ep-footer {
-      padding: 8px 14px 12px;
+    .episode-actions {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
-    .spread-badge {
-      font-size: 0.78rem;
+    .person-note-preview {
       color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-top: 8px;
+      min-height: 18px;
     }
 
+    textarea { min-height: 76px; resize: vertical; }
+
     .empty-state, .loading-state {
-      grid-column: 1 / -1;
-      padding: 40px 20px;
+      padding: 28px;
       text-align: center;
       color: var(--muted);
       border: 1px dashed var(--border);
-      border-radius: var(--r);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.03);
     }
 
-    .mobile-nav-trigger {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 24px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      box-shadow: 0 8px 30px rgba(249,115,22,0.4);
-    }
-
-    .mobile-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
-    }
-
-    .mobile-overlay.open { display: flex; align-items: flex-end; }
-
-    .mobile-sheet {
-      width: 100%;
-      max-height: 80vh;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-radius: 20px 20px 0 0;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .mobile-sheet-head {
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .mobile-sheet-list {
-      overflow-y: auto;
-      padding: 8px;
-      flex: 1;
-    }
-
-    .main-footer {
-      padding: 12px 16px;
-      border-top: 1px solid var(--border);
+    .footer-note {
+      margin-top: 18px;
       color: var(--muted);
-      font-size: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
+      font-size: 0.92rem;
+      line-height: 1.55;
     }
 
-    @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      .mobile-nav-trigger { display: block; }
-      .stats-row { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 1200px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+      .watch-controls { grid-template-columns: 1fr 1fr; }
     }
 
-    @media (max-width: 600px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-      .stats-row .stat:last-child { display: none; }
-      .episodes-grid { grid-template-columns: 1fr; padding: 10px; gap: 10px; }
-      .name-inputs input { max-width: none; flex-basis: calc(50% - 4px); }
-      .filter-row { width: 100%; }
-      .filter-row select { flex: 1; }
-      .main-toolbar { padding: 12px; }
-      h1 { font-size: 1.2rem; }
-      .sync-bar { flex-direction: column; }
-      .sync-bar input[type="text"] { width: 100%; }
-    }
-
-    .header-progress {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .header-progress-bar {
-      flex: 1;
-      height: 4px;
-      background: var(--border);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .header-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius: 99px;
-      transition: width 0.4s ease;
-    }
-
-    .header-progress-label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      white-space: nowrap;
+    @media (max-width: 720px) {
+      .stats, .controls, .episodes-grid, .watch-controls { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-
-  <header class="header">
-    <div class="header-inner">
-      <div class="header-top">
-        <div class="brand">
-          <div class="brand-icon">🍥</div>
-          <div>
-            <h1>Naruto Ratings Hub</h1>
-            <p class="subtitle">Shared live ratings for Novo, Arijit & Eric</p>
-          </div>
+  <div class="wrap">
+    <section class="hero">
+      <div class="top-row">
+        <div>
+          <h1>Naruto Shared Ratings Hub</h1>
+          <p class="sub">
+            Use the shared room ID as "naruto" to sync the data
+          </p>
         </div>
-
-        <div class="header-progress" style="flex:1; max-width:300px; align-self:center;">
-          <div class="header-progress-bar">
-            <div class="header-progress-fill" id="globalProgress" style="width:0%"></div>
-          </div>
-          <span class="header-progress-label" id="globalProgressLabel">0 / 220 rated</span>
-        </div>
-
-        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-          <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;color:#7a82a0;">
-            <span style="width:10px;height:10px;border-radius:3px;background:rgba(239,68,68,0.5);display:inline-block;"></span>Filler
-          </span>
-          <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;color:#7a82a0;">
-            <span style="width:10px;height:10px;border-radius:3px;background:rgba(234,179,8,0.5);display:inline-block;"></span>Partial
-          </span>
-          <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;color:#7a82a0;">
-            <span style="width:10px;height:10px;border-radius:3px;background:rgba(255,255,255,0.12);display:inline-block;"></span>Canon
-          </span>
-        </div>
+        <div class="badge"></div>
       </div>
 
-      <div class="stats-row">
+      <div class="stats">
         <div class="stat">
-          <div class="stat-label">Episodes</div>
+          <div class="stat-label">Episodes Loaded</div>
           <div class="stat-value" id="loadedCount">0</div>
         </div>
         <div class="stat">
-          <div class="stat-label">Rated</div>
+          <div class="stat-label">Episodes Rated</div>
           <div class="stat-value" id="ratedCount">0</div>
         </div>
-        <div class="stat" style="border-color: var(--novo-border);">
-          <div class="stat-label" id="novoAvgLabel" style="color: var(--novo);">Novo avg</div>
+        <div class="stat">
+          <div class="stat-label" id="personOneAverageLabel">Novo Average</div>
           <div class="stat-value" id="personOneAverage">—</div>
         </div>
-        <div class="stat" style="border-color: var(--arijit-border);">
-          <div class="stat-label" id="arijitAvgLabel" style="color: var(--arijit);">Arijit avg</div>
+        <div class="stat">
+          <div class="stat-label" id="personTwoAverageLabel">Arijit Average</div>
           <div class="stat-value" id="personTwoAverage">—</div>
         </div>
-        <div class="stat" style="border-color: var(--eric-border);">
-          <div class="stat-label" id="ericAvgLabel" style="color: var(--eric);">Eric avg</div>
+        <div class="stat">
+          <div class="stat-label" id="personThreeAverageLabel">Eric Average</div>
           <div class="stat-value" id="personThreeAverage">—</div>
         </div>
       </div>
 
-      <div class="sync-bar">
-        <input type="text" id="roomId" placeholder="Room ID (e.g. naruto-boys)" style="flex:1;" />
-        <button class="btn-primary" id="connectBtn">Connect</button>
-        <button class="btn-ghost" id="disconnectBtn">Local</button>
-        <div class="pill-status">
-          <span class="dot" id="statusDot"></span>
-          <span id="statusText">Local mode</span>
+      <div class="setup">
+        <input type="text" id="roomId" placeholder="Shared room ID (e.g. naruto-boys)" />
+        <div class="button-row">
+          <button class="primary" id="connectBtn">Connect live sync</button>
+          <button class="secondary" id="disconnectBtn">Local mode</button>
         </div>
+        <div class="status-pill"><span class="dot" id="statusDot"></span><span id="statusText">Local mode</span></div>
       </div>
-    </div>
-  </header>
+    </section>
 
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="sidebar-head">
-        <h2>Story Arcs</h2>
-      </div>
-      <div class="sidebar-controls">
-        <input type="text" id="searchInput" placeholder="Search episodes…" />
-        <select id="sortMode">
-          <option value="episode-asc">Episode # ↑</option>
-          <option value="episode-desc">Episode # ↓</option>
-          <option value="avg-desc">Highest avg rating</option>
-          <option value="one-desc">Highest Novo rating</option>
-          <option value="two-desc">Highest Arijit rating</option>
-          <option value="three-desc">Highest Eric rating</option>
-        </select>
-        <select id="filterMode">
-          <option value="all">All episodes</option>
-          <option value="rated">Rated only</option>
-          <option value="unrated">Unrated only</option>
-          <option value="canon">Canon only</option>
-          <option value="filler">Filler only</option>
-          <option value="partial">Partial filler only</option>
-          <option value="disagreed">Biggest disagreements</option>
-        </select>
-        <div style="display:flex; gap:6px;">
-          <button class="btn-ghost btn-sm" id="firstArcBtn" style="flex:1;">← First</button>
-          <button class="btn-ghost btn-sm" id="lastArcBtn" style="flex:1;">Last →</button>
-        </div>
-      </div>
-      <div class="arc-list" id="arcList"></div>
-    </aside>
-
-    <main class="main">
-      <div class="main-toolbar">
-        <div class="main-toolbar-top">
-          <div>
-            <div class="arc-title" id="currentArcTitle">Loading…</div>
-            <div class="arc-count" id="visibleCountLabel"></div>
+    <section class="main-grid">
+      <aside class="panel">
+        <div class="panel-inner stack">
+          <div class="panel-head">
+            <h2>Arcs</h2>
+            <span class="small" id="arcCountLabel">0 arcs</span>
           </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn-ghost btn-sm" id="exportBtn">↓ Export</button>
-            <button class="btn-danger btn-sm" id="clearBtn">Clear all</button>
+
+          <input id="searchInput" type="text" placeholder="Search episode or arc..." />
+
+          <select id="sortMode">
+            <option value="episode-asc">Sort: episode number ↑</option>
+            <option value="episode-desc">Sort: episode number ↓</option>
+            <option value="avg-desc">Sort: highest average rating</option>
+            <option value="one-desc">Sort: highest Novo rating</option>
+            <option value="two-desc">Sort: highest Arijit rating</option>
+            <option value="three-desc">Sort: highest Eric rating</option>
+          </select>
+
+          <select id="filterMode">
+            <option value="all">Show: all episodes</option>
+            <option value="rated">Show: rated only</option>
+            <option value="unrated">Show: unrated only</option>
+            <option value="disagreed">Show: biggest disagreements</option>
+          </select>
+
+          <div class="button-row">
+            <button class="secondary" id="firstArcBtn">First arc</button>
+            <button class="secondary" id="lastArcBtn">Last arc</button>
           </div>
+
+          <div class="arc-list" id="arcList"></div>
         </div>
+      </aside>
 
-        <div class="name-inputs">
-          <input type="text" id="personOneName" placeholder="Person 1 name" />
-          <input type="text" id="personTwoName" placeholder="Person 2 name" />
-          <input type="text" id="personThreeName" placeholder="Person 3 name" />
+      <main class="panel">
+        <div class="episodes-wrap">
+          <div class="controls">
+            <input type="text" id="personOneName" placeholder="Person 1 name" />
+            <input type="text" id="personTwoName" placeholder="Person 2 name" />
+            <input type="text" id="personThreeName" placeholder="Person 3 name" />
+            <button class="secondary" id="exportBtn">Export JSON</button>
+            <button class="danger" id="clearBtn">Clear ratings</button>
+          </div>
+
+          <div class="watch-controls">
+            <input type="text" id="currentEpisodeInput" placeholder="Current episode #" />
+            <button class="primary" id="goEpisodeBtn">Go to episode</button>
+            <button class="secondary" id="markWatchedBtn">Mark watched</button>
+            <button class="secondary" id="prevEpisodeBtn">Previous</button>
+            <button class="secondary" id="nextEpisodeBtn">Next</button>
+          </div>
+
+          <div class="episodes-head">
+            <div>
+              <h2 id="currentArcTitle">Loading episodes…</h2>
+              <p class="small" id="currentArcSummary">The page will pull the original Naruto episode titles automatically.</p>
+            </div>
+            <div class="small" id="visibleCountLabel">0 episodes visible</div>
+          </div>
+
+          <div id="episodesContainer" class="episodes-grid">
+            <div class="loading-state">Loading real Naruto episode titles…</div>
+          </div>
+
+          <p class="footer-note">
+            Ratings, person-specific notes, and current episode progress save locally by default, or live-sync through Firestore once connected.
+          </p>
         </div>
-
-        <div class="filter-row" id="mobileFilters" style="display:none;">
-          <input type="text" id="searchInputMobile" placeholder="Search episodes…" style="flex:1;" />
-          <select id="sortModeMobile">
-            <option value="episode-asc">Episode # ↑</option>
-            <option value="episode-desc">Episode # ↓</option>
-            <option value="avg-desc">Highest avg</option>
-            <option value="one-desc">Novo top</option>
-            <option value="two-desc">Arijit top</option>
-            <option value="three-desc">Eric top</option>
-          </select>
-          <select id="filterModeMobile">
-            <option value="all">All</option>
-            <option value="rated">Rated</option>
-            <option value="unrated">Unrated</option>
-            <option value="canon">Canon</option>
-            <option value="filler">Filler</option>
-            <option value="partial">Partial filler</option>
-            <option value="disagreed">Disagreements</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="episodes-grid" id="episodesContainer">
-        <div class="loading-state">Loading real Naruto episode titles…</div>
-      </div>
-
-      <div class="main-footer">
-        <span>Ratings sync live via Firestore when connected</span>
-        <span id="currentArcDesc" style="text-align:right; max-width:60%"></span>
-      </div>
-    </main>
-  </div>
-
-  <button class="mobile-nav-trigger" id="mobileNavTrigger">☰ Arcs</button>
-
-  <div class="mobile-overlay" id="mobileOverlay">
-    <div class="mobile-sheet">
-      <div class="mobile-sheet-head">
-        <span style="font-family:'Syne',sans-serif; font-weight:700;">Story Arcs</span>
-        <button class="btn-ghost btn-sm" id="mobileOverlayClose">✕ Close</button>
-      </div>
-      <div class="mobile-sheet-list" id="mobileArcList"></div>
-    </div>
+      </main>
+    </section>
   </div>
 
   <script type="module">
-    let db = null;
-    let docFn = null;
-    let getDocFn = null;
-    let setDocFn = null;
-    let onSnapshotFn = null;
-    let serverTimestampFn = null;
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
 
-    async function initFirebase() {
-      try {
-        const appMod = await import('https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js');
-        const fsMod = await import('https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js');
+    const firebaseConfig = {
+      apiKey: 'AIzaSyD0CAmT_PLEIv85NwrdzE7DhwFfg6eg7WE',
+      authDomain: 'naruto-838cf.firebaseapp.com',
+      projectId: 'naruto-838cf',
+      storageBucket: 'naruto-838cf.firebasestorage.app',
+      messagingSenderId: '280791678540',
+      appId: '1:280791678540:web:b60294f53eeb782505bee9',
+      measurementId: 'G-EDH87N1C4W'
+    };
 
-        const firebaseConfig = {
-          apiKey: 'AIzaSyD0CAmT_PLEIv85NwrdzE7DhwFfg6eg7WE',
-          authDomain: 'naruto-838cf.firebaseapp.com',
-          projectId: 'naruto-838cf',
-          storageBucket: 'naruto-838cf.firebasestorage.app',
-          messagingSenderId: '280791678540',
-          appId: '1:280791678540:web:b60294f53eeb782505bee9',
-          measurementId: 'G-EDH87N1C4W'
-        };
+    const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch {}
+    const db = getFirestore(app);
 
-        const app = appMod.initializeApp(firebaseConfig);
-        db = fsMod.getFirestore(app);
-        docFn = fsMod.doc;
-        getDocFn = fsMod.getDoc;
-        setDocFn = fsMod.setDoc;
-        onSnapshotFn = fsMod.onSnapshot;
-        serverTimestampFn = fsMod.serverTimestamp;
-      } catch (e) {
-        console.warn('Firebase unavailable, running local only:', e);
-      }
-    }
-
-    const STORAGE_KEY = 'naruto-shared-ratings-v2';
+    const STORAGE_KEY = 'naruto-shared-ratings-v3';
     const ROOM_KEY = 'naruto-shared-room';
 
     const ARC_DEFS = [
-      { id: 'prologue', name: 'Land of Waves', start: 1, end: 19, description: "Team 7's first real mission, Zabuza, Haku, and the emotional core." },
-      { id: 'chunin-exams', name: 'Chunin Exams', start: 20, end: 67, description: 'Written exam, Forest of Death, prelims, training, and tournament chaos.' },
-      { id: 'konoha-crush', name: 'Konoha Crush', start: 68, end: 80, description: 'The invasion with Gaara, Orochimaru, and the Third Hokage showdown.' },
-      { id: 'search-for-tsunade', name: 'Search for Tsunade', start: 81, end: 100, description: "Jiraiya, Tsunade, Kabuto, and Naruto's Rasengan development." },
-      { id: 'special-missions', name: 'Tea Country', start: 101, end: 106, description: 'The Kakashi face episode and the Land of Tea escort mission.' },
-      { id: 'sasuke-recovery', name: 'Sasuke Recovery', start: 107, end: 135, description: 'The Sound Four fights and Naruto vs Sasuke.' },
-      { id: 'filler-1', name: 'Filler Missions I', start: 136, end: 160, description: 'Early filler run after the major canon climax.' },
-      { id: 'filler-2', name: 'Filler Missions II', start: 161, end: 185, description: 'More side missions and village-level stories.' },
-      { id: 'filler-3', name: 'Filler Missions III', start: 186, end: 220, description: 'Final stretch before Shippuden.' }
+      { id: 'prologue', name: 'Prologue — Land of Waves', start: 1, end: 19, description: 'Team 7’s first real mission, Zabuza, Haku, and the first emotional core of the series.' },
+      { id: 'chunin-exams', name: 'Chunin Exams', start: 20, end: 67, description: 'Written exam, Forest of Death, prelims, training, and the tournament chaos.' },
+      { id: 'konoha-crush', name: 'Konoha Crush', start: 68, end: 80, description: 'The invasion arc with Gaara, Orochimaru, and the Third Hokage showdown.' },
+      { id: 'search-for-tsunade', name: 'Search for Tsunade', start: 81, end: 100, description: 'Jiraiya, Tsunade, Kabuto, and Naruto’s Rasengan development.' },
+      { id: 'special-missions', name: 'Special & Tea Country', start: 101, end: 106, description: 'The Kakashi face episode and the Land of Tea escort mission.' },
+      { id: 'sasuke-recovery', name: 'Sasuke Recovery Mission', start: 107, end: 135, description: 'The Sound Four fights and Naruto vs Sasuke.' },
+      { id: 'filler-missions-1', name: 'Filler Missions I', start: 136, end: 160, description: 'Early filler run after the major canon climax.' },
+      { id: 'filler-missions-2', name: 'Filler Missions II', start: 161, end: 185, description: 'More side missions and village-level stories.' },
+      { id: 'filler-missions-3', name: 'Filler Missions III', start: 186, end: 220, description: 'Final stretch of original Naruto before Shippuden.' }
     ];
 
     const defaultState = {
       names: { one: 'Novo', two: 'Arijit', three: 'Eric' },
+      currentEpisode: 1,
       ratings: {}
     };
 
@@ -924,16 +574,41 @@
     let roomRef = null;
     let unsubscribe = null;
     let liveMode = false;
-    let isMobile = window.innerWidth <= 900;
 
-    window.addEventListener('resize', () => {
-      isMobile = window.innerWidth <= 900;
-      updateMobileFiltersVisibility();
-    });
-
-    function updateMobileFiltersVisibility() {
-      document.getElementById('mobileFilters').style.display = isMobile ? 'flex' : 'none';
-    }
+    const loadedCount = document.getElementById('loadedCount');
+    const ratedCount = document.getElementById('ratedCount');
+    const personOneAverage = document.getElementById('personOneAverage');
+    const personTwoAverage = document.getElementById('personTwoAverage');
+    const personThreeAverage = document.getElementById('personThreeAverage');
+    const personOneAverageLabel = document.getElementById('personOneAverageLabel');
+    const personTwoAverageLabel = document.getElementById('personTwoAverageLabel');
+    const personThreeAverageLabel = document.getElementById('personThreeAverageLabel');
+    const arcCountLabel = document.getElementById('arcCountLabel');
+    const searchInput = document.getElementById('searchInput');
+    const sortMode = document.getElementById('sortMode');
+    const filterMode = document.getElementById('filterMode');
+    const arcList = document.getElementById('arcList');
+    const currentArcTitle = document.getElementById('currentArcTitle');
+    const currentArcSummary = document.getElementById('currentArcSummary');
+    const visibleCountLabel = document.getElementById('visibleCountLabel');
+    const episodesContainer = document.getElementById('episodesContainer');
+    const personOneNameInput = document.getElementById('personOneName');
+    const personTwoNameInput = document.getElementById('personTwoName');
+    const personThreeNameInput = document.getElementById('personThreeName');
+    const exportBtn = document.getElementById('exportBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const firstArcBtn = document.getElementById('firstArcBtn');
+    const lastArcBtn = document.getElementById('lastArcBtn');
+    const roomIdInput = document.getElementById('roomId');
+    const connectBtn = document.getElementById('connectBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const currentEpisodeInput = document.getElementById('currentEpisodeInput');
+    const goEpisodeBtn = document.getElementById('goEpisodeBtn');
+    const markWatchedBtn = document.getElementById('markWatchedBtn');
+    const prevEpisodeBtn = document.getElementById('prevEpisodeBtn');
+    const nextEpisodeBtn = document.getElementById('nextEpisodeBtn');
 
     function loadState() {
       try {
@@ -946,6 +621,7 @@
             two: parsed?.names?.two || 'Arijit',
             three: parsed?.names?.three || 'Eric'
           },
+          currentEpisode: Number.isFinite(parsed?.currentEpisode) ? parsed.currentEpisode : 1,
           ratings: parsed?.ratings || {}
         };
       } catch {
@@ -958,39 +634,63 @@
     }
 
     function loadRoomId() {
-      document.getElementById('roomId').value = localStorage.getItem(ROOM_KEY) || 'naruto-boys';
+      roomIdInput.value = localStorage.getItem(ROOM_KEY) || 'naruto';
     }
 
     function saveRoomId() {
-      localStorage.setItem(ROOM_KEY, document.getElementById('roomId').value.trim());
+      localStorage.setItem(ROOM_KEY, roomIdInput.value.trim());
     }
 
     function setStatus(type, text) {
-      document.getElementById('statusText').textContent = text;
-      const dot = document.getElementById('statusDot');
-      dot.className = 'dot';
-      if (type === 'connected') dot.classList.add('connected');
-      if (type === 'error') dot.classList.add('error');
+      statusText.textContent = text;
+      statusDot.className = 'dot';
+      if (type === 'connected') statusDot.classList.add('connected');
+      if (type === 'error') statusDot.classList.add('error');
+    }
+
+    function clampEpisodeNumber(value) {
+      const max = episodes.length || 220;
+      const n = Number(value);
+      if (!Number.isFinite(n)) return 1;
+      return Math.min(Math.max(Math.round(n), 1), max);
+    }
+
+    function getArcById(id) {
+      return ARC_DEFS.find(a => a.id === id);
+    }
+
+    function getArcForEpisode(number) {
+      return ARC_DEFS.find(a => number >= a.start && number <= a.end) || ARC_DEFS[0];
+    }
+
+    function scrollToEpisode(number) {
+      const card = document.getElementById(`episode-card-${number}`);
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function getEpisodesForArc(arcId) {
+      const arc = getArcById(arcId);
+      return episodes.filter(ep => ep.number >= arc.start && ep.number <= arc.end).map(ep => ({ ...ep, arcId, arcName: arc.name }));
     }
 
     function getEpisodeData(id) {
       if (!state.ratings[id]) {
         state.ratings[id] = {
-          one: 0,
-          two: 0,
-          three: 0,
-          noteOne: '',
-          noteTwo: '',
-          noteThree: ''
+          one: 0, two: 0, three: 0,
+          noteOne: '', noteTwo: '', noteThree: ''
         };
       }
       return state.ratings[id];
     }
 
     function average(values) {
-      const valid = values.filter(v => v > 0);
+      const valid = values.filter(v => typeof v === 'number' && v > 0);
       if (!valid.length) return null;
       return valid.reduce((a, b) => a + b, 0) / valid.length;
+    }
+
+    function formatAvg(value) {
+      return value == null ? '—' : value.toFixed(1);
     }
 
     function getJoint(epId) {
@@ -1005,265 +705,203 @@
       return Math.max(...valid) - Math.min(...valid);
     }
 
-    function esc(str) {
+    function escapeHtml(str) {
       return String(str ?? '')
         .replaceAll('&', '&amp;')
         .replaceAll('<', '&lt;')
         .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;');
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
     }
 
-    function getArcById(id) {
-      return ARC_DEFS.find(a => a.id === id);
+    async function loadRealEpisodeTitles() {
+      try {
+        const res = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=List_of_Naruto_episodes&prop=text&format=json&origin=*');
+        const data = await res.json();
+        const html = data?.parse?.text?.['*'];
+        if (!html) throw new Error('No episode HTML found');
+
+        const parsed = new DOMParser().parseFromString(html, 'text/html');
+        const rows = [...parsed.querySelectorAll('tr')];
+        const found = [];
+
+        for (const row of rows) {
+          const text = row.textContent.replace(/\s+/g, ' ').trim();
+          const match = text.match(/^(\d+)\s+(\d+)\s+"([^"]+)"/);
+          if (!match) continue;
+          const number = Number(match[1]);
+          const title = match[3].trim();
+          if (!Number.isFinite(number) || !title) continue;
+          if (!found.some(ep => ep.number === number)) found.push({ id: `ep-${number}`, number, title });
+        }
+
+        found.sort((a, b) => a.number - b.number);
+        if (found.length < 200) throw new Error(`Only found ${found.length} titles`);
+        episodes = found.slice(0, 220);
+      } catch (error) {
+        console.error(error);
+        episodes = Array.from({ length: 220 }, (_, i) => ({ id: `ep-${i + 1}`, number: i + 1, title: `Naruto Episode ${i + 1}` }));
+        setStatus('error', 'Using fallback titles');
+      }
     }
 
-    function getEpisodesForArc(arcId) {
-      const arc = getArcById(arcId);
-      return episodes
-        .filter(ep => ep.number >= arc.start && ep.number <= arc.end)
-        .map(ep => ({ ...ep, arcId, arcName: arc.name }));
-    }
-
-    function getSearchValue() {
-      return isMobile
-        ? document.getElementById('searchInputMobile').value.trim().toLowerCase()
-        : document.getElementById('searchInput').value.trim().toLowerCase();
-    }
-
-    function getSortValue() {
-      return isMobile
-        ? document.getElementById('sortModeMobile').value
-        : document.getElementById('sortMode').value;
-    }
-
-    function getFilterValue() {
-      return isMobile
-        ? document.getElementById('filterModeMobile').value
-        : document.getElementById('filterMode').value;
-    }
-
-    function loadRealEpisodeTitles() {
-      const RAW = [
-        [1,'Enter: Naruto Uzumaki!','canon'],[2,'My Name is Konohamaru!','canon'],[3,'Sasuke and Sakura: Friends or Foes?','canon'],[4,'Pass or Fail: Survival Test','canon'],[5,"You Failed! Kakashi's Final Decision",'canon'],[6,'A Dangerous Mission! Journey to the Land of Waves!','canon'],[7,'The Assassin of the Mist!','partial'],[8,'The Oath of Pain','canon'],[9,'Kakashi: Sharingan Warrior','partial'],[10,'The Forest of Chakra','canon'],
-        [11,'The Land Where a Hero Once Lived','canon'],[12,'Battle on the Bridge! Zabuza Returns!!','canon'],[13,"Haku's Secret Jutsu: Crystal Ice Mirrors",'canon'],[14,'The Number One Hyperactive, Knucklehead Ninja Joins the Fight!!','partial'],[15,'Zero Visibility: The Sharingan Shatters','partial'],[16,'The Broken Seal','partial'],[17,'White Past: Hidden Ambition','canon'],[18,'The Weapons Known as Shinobi','partial'],[19,'The Demon in the Snow','partial'],[20,'A New Chapter Begins: The Chunin Exam!','partial'],
-        [21,'Identify Yourself: Powerful New Rivals','partial'],[22,'Chunin Challenge: Rock Lee vs. Sasuke!','canon'],[23,'Genin Takedown! All Nine Rookies Face Off!','partial'],[24,'Start Your Engines: The Chunin Exam Begins!','partial'],[25,'The Tenth Question: All or Nothing!','canon'],[26,'Special Report: Live from the Forest of Death!','filler'],[27,'The Chunin Exam Stage 2: The Forest of Death','partial'],[28,'Eat or be Eaten: Panic in the Forest','partial'],[29,"Naruto's Counterattack: Never Give In!",'partial'],[30,'The Sharingan Revived: Dragon-Flame Jutsu!','partial'],
-        [31,"Bushy Brow's Pledge: Undying Love and Protection!",'canon'],[32,'Sakura Blossoms!','canon'],[33,'Battle Formation: Ino-Shika-Cho!','canon'],[34,"Akamaru Trembles: Gaara's Cruel Strength!",'canon'],[35,"The Scroll's Secret: No Peeking Allowed",'canon'],[36,'Clone vs. Clone: Mine are Better than Yours!','canon'],[37,'Surviving the Cut! The Rookie Nine Together Again!','partial'],[38,'Narrowing the Field: Sudden Death Elimination!','partial'],[39,"Bushy Brow's Jealousy: Lions Barrage Unleashed!",'partial'],[40,'Kakashi and Orochimaru: Face-to-Face!','partial'],
-        [41,'Kunoichi Rumble: The Rivals Get Serious!','partial'],[42,'The Ultimate Battle: Cha!','canon'],[43,'Killer Kunoichi and a Shaky Shikamaru','partial'],[44,"Akamaru Unleashed! Who's Top Dog Now?",'partial'],[45,"Surprise Attack! Naruto's Secret Weapon!",'partial'],[46,'Byakugan Battle: Hinata Grows Bold!','partial'],[47,'A Failure Stands Tall!','partial'],[48,'Gaara vs. Rock Lee: The Power of Youth Explodes!','canon'],[49,"Lee's Hidden Strength: Forbidden Secret Jutsu!",'partial'],[50,'The Fifth Gate: A Splendid Ninja is Born','canon'],
-        [51,'A Shadow in Darkness: Danger Approaches Sasuke','canon'],[52,"Ebisu Returns: Naruto's Toughest Training Yet!",'partial'],[53,'Long Time No See: Jiraiya Returns!','partial'],[54,'The Summoning Jutsu: Wisdom of the Toad Sage!','partial'],[55,'A Feeling of Yearning, A Flower Full of Hope','partial'],[56,'Live or Die: Risk it All to Win it All!','partial'],[57,'He Flies! He Jumps! He Lurks! Chief Toad Appears!','partial'],[58,'Hospital Besieged: The Evil Hand Revealed!','partial'],[59,'The Final Rounds: Rush to the Battle Arena!','partial'],[60,'Byakugan vs. Shadow Clone','partial'],
-        [61,'Ultimate Defense: Zero Blind Spot!','canon'],[62,"A Failure's True Power",'canon'],[63,'Hit it or Quit it: The Final Rounds Get Complicated!','partial'],[64,'Zero Motivation: The Guy with Cloud Envy!','canon'],[65,'Dancing Leaf, Squirming Sand','canon'],[66,"Bushy Brow's Jutsu: Sasuke Style!",'partial'],[67,'Late for the Show, But Ready to Go! The Ultimate Secret Technique is Born!','canon'],[68,'Zero Hour! The Destruction of the Hidden Leaf Village Begins!','canon'],[69,'Village in Distress: A New A-Ranked Mission!','partial'],[70,"A Shirker's Call to Action: A Layabout No More!",'partial'],
-        [71,'An Unrivaled Match: Hokage Battle Royale!','partial'],[72,'A Mistake from the Past: A Face Revealed!','partial'],[73,'Forbidden Secret Technique: Reaper Death Seal!','canon'],[74,"Astonishing Truth! Gaara's Identity Emerges!",'partial'],[75,"Sasuke's Decision: Pushed to the Edge!",'canon'],[76,'Assassin of the Moonlit Night','canon'],[77,'Light vs. Dark: The Two Faces of Gaara','canon'],[78,"Naruto's Ninja Handbook",'canon'],[79,'Beyond the Limit of Darkness and Light','canon'],[80,'The Third Hokage, Forever...','canon'],
-        [81,'Return of the Morning Mist','canon'],[82,'Eye to Eye: Sharingan vs. Sharingan!','canon'],[83,"Jiraiya: Naruto's Potential Disaster!",'partial'],[84,'Roar, Chidori! Brother vs. Brother!','canon'],[85,'Hate Among the Uchihas: The Last of the Clan!','canon'],[86,'A New Training Begins: I Will Be Strong!','canon'],[87,'Keep on Training: Pop Goes the Water Balloon!','canon'],[88,'Focal Point: The Mark of the Leaf','canon'],[89,"An Impossible Choice: The Pain Within Tsunade's Heart",'canon'],[90,'Unforgivable! A Total Lack of Respect!','canon'],
-        [91,'Inheritence! The Necklace of Death!','canon'],[92,"A Dubious Offer! Tsunade's Choice!",'canon'],[93,'Breakdown! The Deal is Off!','canon'],[94,'Attack! Fury of the Rasengan!','canon'],[95,'The Fifth Hokage! A Life on the Line!','canon'],[96,'Deadlock! Sannin Showdown!','canon'],[97,"Kidnapped! Naruto's Hot Spring Adventure!",'filler'],[98,'Tsunade’s Warning: Ninja No More!','partial'],[99,'The Will of Fire Still Burns!','partial'],[100,'Sensei and Student: The Bond of the Shinobi','partial'],
-        [101,"Gotta See! Gotta Know! Kakashi-Sensei's True Face!",'filler'],[102,'Mission: Help an Old Friend in the Land of Tea','filler'],[103,'The Race is on! Trouble on the High Seas!','filler'],[104,'Run Idate Run! Nagi Island Awaits!','filler'],[105,'A Fierce Battle of Rolling Thunder!','filler'],[106,'The Last Leg: A Final Act of Desperation','filler'],[107,'The Battle Begins: Naruto vs. Sasuke','canon'],[108,'Bitter Rivals and Broken Bonds','canon'],[109,'An Invitation from the Sound','canon'],[110,'Formation! The Sasuke Retrieval Squad','canon'],
-        [111,'Sound vs. Leaf','canon'],[112,'Squad Mutiny: Everything Falls Apart!','partial'],[113,'Full Throttle Power! Choji, Ablaze!','partial'],[114,"Good-bye Old Friend...! I'll Always Believe in You!",'partial'],[115,'Your Opponent Is Me!','canon'],[116,"360 Degrees of Vision: The Byakugan's Blind Spot",'canon'],[117,'Losing is Not an Option!','canon'],[118,'The Vessel Arrives Too Late','canon'],[119,'Miscalculation: A New Enemy Appears!','canon'],[120,'Roar and Howl! The Ultimate Tag Team','canon'],
-        [121,'To Each His Own Battle','canon'],[122,"Fakeout: Shikamaru's Comeback!",'canon'],[123,"The Leaf's Handsome Devil!",'canon'],[124,'The Beast Within','canon'],[125,'The Sand Shinobi: Allies of the Leaf','canon'],[126,'Showdown: Gaara vs. Kimimaro!','partial'],[127,'Vengeful Strike! The Bracken Dance','partial'],[128,'A Cry on Deaf Ears','canon'],[129,'Brothers: Distance Among the Uchiha','canon'],[130,'Father and Son, the Broken Crest','partial'],
-        [131,'The Secrets of the Mangekyo Sharingan!','partial'],[132,'For a Friend','canon'],[133,'A Plea From a Friend','canon'],[134,'The End of Tears','canon'],[135,'The Promise That Could Not Be Kept','canon'],[136,'Deep Cover!? A Super S-Ranked Mission!','filler'],[137,'A Town of Outlaws, the Shadow of the Fuma Clan','filler'],[138,'Pure Betrayal, and a Fleeting Plea!','filler'],[139,'Pure Terror! The House of Orochimaru','filler'],[140,"Two Heartbeats: Kabuto's Trap",'filler'],
-        [141,"Sakura's Determination",'partial'],[142,'The Three Villains from the Maximum Security Prison','partial'],[143,"Tonton! I'm Counting on You!",'filler'],[144,'A New Squad! Two People and a Dog?!','filler'],[145,'A New Formation: Ino-Shika-Cho!','filler'],[146,"Orochimaru's Shadow",'filler'],[147,"A Clash of Fate: You Can't Bring Me Down",'filler'],[148,'Search for the Rare Bikochu Beetle','filler'],[149,"What's the Difference? Don't All Insects Look Alike?",'filler'],[150,'A Battle of Bugs: The Deceivers and the Deceived','filler'],
-        [151,'Blaze Away Byakugan: This Is My Ninja Way','filler'],[152,'Funeral March for the Living','filler'],[153,'A Lesson Learned: The Iron Fist of Love','filler'],[154,'The Enemy of the Byakugan','filler'],[155,'The Dark Creeping Clouds','filler'],[156,"Raiga's Counterattack",'filler'],[157,'Run! The Curry of Life','filler'],[158,'Follow My Lead! The Great Survival Challenge','filler'],[159,'Bounty Hunter from the Wilderness','filler'],[160,'Hunt or Be Hunted?! Showdown at the O.K. Temple!','filler'],
-        [161,'The Appearance of Strange Visitors','filler'],[162,'The Cursed Warrior','filler'],[163,"The Tactician's Intent",'filler'],[164,'Too Late for Help','filler'],[165,'The Death of Naruto','filler'],[166,'When Time Stands Still','filler'],[167,'When Egrets Flap Their Wings','filler'],[168,'Mix It, Stretch It, Boil It Up! Burn, Copper Pot, Burn!','filler'],[169,'Remembrance: The Lost Page','filler'],[170,'The Closed Door','filler'],
-        [171,'Infiltration: The Set-Up!','filler'],[172,'Despair: A Fractured Heart','filler'],[173,'The Battle at Sea: The Power Unleashed!','filler'],[174,'Impossible! Celebrity Ninja Art - Money Style Jutsu!','filler'],[175,'The Treasure Hunt is On!','filler'],[176,'Run, Dodge, Zigzag! Chase or Be Chased!','filler'],[177,'Please, Mr. Postman!','filler'],[178,"Encounter! The Boy with a Star's Name",'filler'],[179,'The Remembered Lullaby','filler'],[180,'Hidden Jutsu: The Price of The Ninja Art: Kujaku','filler'],
-        [181,'Hoshikage, The Buried Truth','filler'],[182,'Reunion, The Remaining time','filler'],[183,"The Star's Radiance",'filler'],[184,"Kiba's Long Day!",'filler'],[185,'A Legend from the Hidden Leaf: The Onbaa!','filler'],[186,'Laughing Shino','filler'],[187,'Open for Business! The Leaf Moving Service','filler'],[188,'Mystery of the Targeted Merchants','filler'],[189,'A Limitless Supply of Ninja Tools','filler'],[190,'The Byakugan Sees the Blind Spot','filler'],
-        [191,'Forecast: Death! Cloudy with Chance of Sun','filler'],[192,'Ino Screams! Chubby Paradise!','filler'],[193,'Viva Dojo Challenge! Youth Is All About Passion!','filler'],[194,'The Mysterious Curse of the Haunted Castle','filler'],[195,'The Third Super-Beast!','filler'],[196,'Hot-Blooded Confrontation: Student vs. Sensei','filler'],[197,'Crisis! The Hidden Leaf 11 Gather!','filler'],[198,"The ANBU Gives Up? Naruto's Recollection",'filler'],[199,'The Missed Target','filler'],[200,'The Powerful Helper','filler'],
-        [201,'Multiple Traps! Countdown to Destruction','filler'],[202,'The Top 5 Ninja Battles','filler'],[203,"Kurenai's Decision, Squad 8 Left Behind",'filler'],[204,"Yakumo's Sealed Ability",'filler'],[205,"Kurenai's Top-Secret Mission: The Promise With the Third Hokage",'filler'],[206,'Genjutsu or Reality?','filler'],[207,'The Supposed Sealed Ability','filler'],[208,'The Weight of the Prized Artifact!','filler'],[209,'The Enemy: Ninja Dropouts','filler'],[210,'The Bewildering Forest','filler'],
-        [211,'Memory of Flames','filler'],[212,'To Each His Own Path','filler'],[213,'Vanished Memories','filler'],[214,'Bringing Back Reality','filler'],[215,'A Past to Be Erased','filler'],[216,'The Targeted Shukaku','filler'],[217,'Sand Alliance with the Leaf Shinobi','filler'],[218,'The Counterattack!','filler'],[219,'The Ultimate Weapon Reborn','filler'],[220,'Departure','partial'],
-      ];
-
-      episodes = RAW.map(([number, title, fillerStatus]) => ({
-        id: `ep-${number}`,
-        number,
-        title,
-        fillerStatus
-      }));
+    function renderWatchControls() {
+      currentEpisodeInput.value = state.currentEpisode || 1;
     }
 
     function renderStats() {
-      document.getElementById('loadedCount').textContent = episodes.length;
-
-      const ratedEps = episodes.filter(ep => {
+      loadedCount.textContent = episodes.length;
+      const ratedEpisodes = episodes.filter(ep => {
         const d = getEpisodeData(ep.id);
         return d.one > 0 || d.two > 0 || d.three > 0;
       });
 
-      document.getElementById('ratedCount').textContent = ratedEps.length;
-
-      const pct = episodes.length ? Math.round((ratedEps.length / episodes.length) * 100) : 0;
-      document.getElementById('globalProgress').style.width = pct + '%';
-      document.getElementById('globalProgressLabel').textContent = `${ratedEps.length} / ${episodes.length} rated`;
-
-      const n1 = state.names.one || 'Novo';
-      const n2 = state.names.two || 'Arijit';
-      const n3 = state.names.three || 'Eric';
-
-      document.getElementById('novoAvgLabel').textContent = n1 + ' avg';
-      document.getElementById('arijitAvgLabel').textContent = n2 + ' avg';
-      document.getElementById('ericAvgLabel').textContent = n3 + ' avg';
-
-      const avg1 = average(episodes.map(ep => getEpisodeData(ep.id).one));
-      const avg2 = average(episodes.map(ep => getEpisodeData(ep.id).two));
-      const avg3 = average(episodes.map(ep => getEpisodeData(ep.id).three));
-
-      document.getElementById('personOneAverage').textContent = avg1 != null ? avg1.toFixed(1) : '—';
-      document.getElementById('personTwoAverage').textContent = avg2 != null ? avg2.toFixed(1) : '—';
-      document.getElementById('personThreeAverage').textContent = avg3 != null ? avg3.toFixed(1) : '—';
+      personOneAverageLabel.textContent = `${state.names.one || 'Novo'} Average`;
+      personTwoAverageLabel.textContent = `${state.names.two || 'Arijit'} Average`;
+      personThreeAverageLabel.textContent = `${state.names.three || 'Eric'} Average`;
+      ratedCount.textContent = ratedEpisodes.length;
+      personOneAverage.textContent = formatAvg(average(episodes.map(ep => getEpisodeData(ep.id).one)));
+      personTwoAverage.textContent = formatAvg(average(episodes.map(ep => getEpisodeData(ep.id).two)));
+      personThreeAverage.textContent = formatAvg(average(episodes.map(ep => getEpisodeData(ep.id).three)));
+      arcCountLabel.textContent = `${ARC_DEFS.length} arcs`;
     }
 
-    function renderArcListInto(container) {
-      container.innerHTML = ARC_DEFS.map(arc => {
-        const arcEps = getEpisodesForArc(arc.id);
-        const rated = arcEps.filter(ep => {
+    function renderArcList() {
+      arcList.innerHTML = ARC_DEFS.map(arc => {
+        const arcEpisodes = getEpisodesForArc(arc.id);
+        const ratedInArc = arcEpisodes.filter(ep => {
           const d = getEpisodeData(ep.id);
           return d.one > 0 || d.two > 0 || d.three > 0;
         }).length;
-        const pct = arcEps.length ? (rated / arcEps.length) * 100 : 0;
-
         return `
-          <button class="arc-btn ${selectedArcId === arc.id ? 'active' : ''}" data-arc-id="${arc.id}">
-            <span class="arc-name">${esc(arc.name)}</span>
-            <span class="arc-meta">Ep ${arc.start}–${arc.end} · ${rated}/${arcEps.length} rated</span>
-            <div class="arc-progress">
-              <div class="arc-progress-fill" style="width:${pct}%"></div>
-            </div>
+          <button class="arc-button ${selectedArcId === arc.id ? 'active' : ''}" data-arc-id="${arc.id}">
+            <div class="arc-name">${arc.name}</div>
+            <div class="arc-meta">Episodes ${arc.start}–${arc.end} · ${arcEpisodes.length} eps · ${ratedInArc} rated</div>
           </button>
         `;
       }).join('');
 
-      container.querySelectorAll('.arc-btn').forEach(btn => {
+      document.querySelectorAll('.arc-button').forEach(btn => {
         btn.addEventListener('click', () => {
           selectedArcId = btn.dataset.arcId;
-          document.getElementById('mobileOverlay').classList.remove('open');
           renderAll();
         });
       });
     }
 
-    function filterEpisodes(list) {
-      const query = getSearchValue();
-      const filter = getFilterValue();
-      const sort = getSortValue();
-
-      let result = list.filter(ep => {
-        const matchSearch =
-          !query ||
-          ep.title.toLowerCase().includes(query) ||
-          ep.arcName.toLowerCase().includes(query) ||
-          String(ep.number).includes(query);
-
-        if (!matchSearch) return false;
-
-        const d = getEpisodeData(ep.id);
-        const isRated = d.one > 0 || d.two > 0 || d.three > 0;
-
-        if (filter === 'rated') return isRated;
-        if (filter === 'unrated') return !isRated;
-        if (filter === 'canon') return ep.fillerStatus === 'canon';
-        if (filter === 'filler') return ep.fillerStatus === 'filler';
-        if (filter === 'partial') return ep.fillerStatus === 'partial';
-        if (filter === 'disagreed') return getDisagreement(ep.id) > 0;
-
-        return true;
-      });
-
-      result.sort((a, b) => {
-        if (sort === 'episode-asc') return a.number - b.number;
-        if (sort === 'episode-desc') return b.number - a.number;
-        if (sort === 'avg-desc') return (getJoint(b.id) ?? -1) - (getJoint(a.id) ?? -1);
-        if (sort === 'one-desc') return getEpisodeData(b.id).one - getEpisodeData(a.id).one;
-        if (sort === 'two-desc') return getEpisodeData(b.id).two - getEpisodeData(a.id).two;
-        if (sort === 'three-desc') return getEpisodeData(b.id).three - getEpisodeData(a.id).three;
-        return 0;
-      });
-
-      if (filter === 'disagreed') {
-        result.sort((a, b) => getDisagreement(b.id) - getDisagreement(a.id));
-      }
-
-      return result;
-    }
-
     function createStars(value, episodeId, person) {
       let html = '';
       for (let i = 1; i <= 5; i++) {
-        html += `<button class="star ${i <= value ? 'filled' : ''}" data-episode-id="${episodeId}" data-person="${person}" data-value="${i}">★</button>`;
+        html += `<button class="star ${i <= value ? 'filled' : ''}" data-episode-id="${episodeId}" data-person="${person}" data-value="${i}" title="${i} stars">★</button>`;
       }
       return html;
     }
 
-    function renderRatingBlock(epId, person, cls, name, starVal, textareaVal, savedNote) {
-      return `
-        <div class="rblock ${cls}">
-          <div class="rblock-top">
-            <span class="rblock-name">${name}</span>
-            <span class="rblock-score">${starVal ? starVal + '/5' : '—'}</span>
-          </div>
-          <div class="stars-row">${createStars(starVal, epId, person)}</div>
-          <button class="btn-secondary btn-sm submit-rating-btn" data-episode-id="${epId}" data-person="${person}">Submit rating</button>
-          <div class="rblock-actions" style="margin-top:6px;">
-            <textarea data-person-note="${epId}-${person}" placeholder="${name}'s note…">${esc(textareaVal)}</textarea>
-            <div class="rblock-actions-col">
-              <button class="btn-secondary btn-sm submit-note-btn" data-episode-id="${epId}" data-person="${person}">Save note</button>
-            </div>
-          </div>
-          <div class="note-preview">${savedNote ? esc(savedNote) : 'No note yet'}</div>
-        </div>
-      `;
+    function filterEpisodes(list) {
+      const query = searchInput.value.trim().toLowerCase();
+      let result = list.filter(ep => {
+        const matchesSearch = !query || ep.title.toLowerCase().includes(query) || ep.arcName.toLowerCase().includes(query) || String(ep.number).includes(query);
+        if (!matchesSearch) return false;
+
+        const d = getEpisodeData(ep.id);
+        const isRated = d.one > 0 || d.two > 0 || d.three > 0;
+        const disagreed = getDisagreement(ep.id) > 0;
+
+        if (filterMode.value === 'rated') return isRated;
+        if (filterMode.value === 'unrated') return !isRated;
+        if (filterMode.value === 'disagreed') return disagreed;
+        return true;
+      });
+
+      result.sort((a, b) => {
+        if (sortMode.value === 'episode-asc') return a.number - b.number;
+        if (sortMode.value === 'episode-desc') return b.number - a.number;
+        if (sortMode.value === 'avg-desc') return (getJoint(b.id) ?? -1) - (getJoint(a.id) ?? -1);
+        if (sortMode.value === 'one-desc') return getEpisodeData(b.id).one - getEpisodeData(a.id).one;
+        if (sortMode.value === 'two-desc') return getEpisodeData(b.id).two - getEpisodeData(a.id).two;
+        if (sortMode.value === 'three-desc') return getEpisodeData(b.id).three - getEpisodeData(a.id).three;
+        return 0;
+      });
+
+      if (filterMode.value === 'disagreed') {
+        result.sort((a, b) => getDisagreement(b.id) - getDisagreement(a.id));
+      }
+      return result;
     }
 
     function renderEpisodes() {
+      const current = clampEpisodeNumber(state.currentEpisode || 1);
+      state.currentEpisode = current;
+      const currentArc = getArcForEpisode(current);
+      if (!searchInput.value.trim() && filterMode.value === 'all') selectedArcId = currentArc.id;
+
       const arc = getArcById(selectedArcId);
-      const visible = filterEpisodes(getEpisodesForArc(selectedArcId));
+      const visibleEpisodes = filterEpisodes(getEpisodesForArc(selectedArcId));
+      currentArcTitle.textContent = arc.name;
+      currentArcSummary.textContent = `${arc.description} Episodes ${arc.start}–${arc.end}. Current watch point: Episode ${current}.`;
+      visibleCountLabel.textContent = `${visibleEpisodes.length} episodes visible`;
 
-      document.getElementById('currentArcTitle').textContent = arc.name;
-      document.getElementById('currentArcDesc').textContent = arc.description;
-      document.getElementById('visibleCountLabel').textContent = `${visible.length} episodes`;
-
-      if (!visible.length) {
-        document.getElementById('episodesContainer').innerHTML = `<div class="empty-state">No episodes match your filter in this arc.</div>`;
+      if (!visibleEpisodes.length) {
+        episodesContainer.innerHTML = `<div class="empty-state">No episodes match your current search/filter in this arc.</div>`;
         return;
       }
 
-      const n1 = esc(state.names.one || 'Novo');
-      const n2 = esc(state.names.two || 'Arijit');
-      const n3 = esc(state.names.three || 'Eric');
-
-      document.getElementById('episodesContainer').innerHTML = visible.map(ep => {
-        const d = getEpisodeData(ep.id);
+      episodesContainer.innerHTML = visibleEpisodes.map(ep => {
+        const data = getEpisodeData(ep.id);
         const joint = getJoint(ep.id);
-        const dis = getDisagreement(ep.id);
-
-        const fillerClass =
-          ep.fillerStatus === 'filler'
-            ? 'filler'
-            : ep.fillerStatus === 'partial'
-            ? 'partial-filler'
-            : '';
-
-        const fillerBadge =
-          ep.fillerStatus === 'filler'
-            ? `<span class="filler-badge full">⚠ Filler</span>`
-            : ep.fillerStatus === 'partial'
-            ? `<span class="filler-badge partial">~ Partial filler</span>`
-            : '';
-
+        const disagreement = getDisagreement(ep.id);
         return `
-          <article class="ep-card ${fillerClass}">
-            <div class="ep-header">
+          <article id="episode-card-${ep.number}" class="episode-card ${ep.number < current ? 'watched' : ''} ${ep.number === current ? 'current' : ''}">
+            <div class="episode-top">
               <div>
-                <div class="ep-num">Episode ${ep.number}</div>
-                <div class="ep-title">${esc(ep.title)}</div>
-                ${fillerBadge}
+                <div class="episode-number">Episode ${ep.number}</div>
+                <div class="episode-title">${escapeHtml(ep.title)}</div>
               </div>
-              <div class="ep-avg">${joint != null ? joint.toFixed(1) + '★' : '—'}</div>
+              <div class="button-row">
+                ${ep.number < current ? '<div class="watch-badge watched-ep">Watched</div>' : ''}
+                ${ep.number === current ? '<div class="watch-badge current-ep">Current</div>' : ''}
+                ${ep.number === current + 1 ? '<div class="watch-badge next-ep">Next</div>' : ''}
+                <div class="pill">Avg: ${joint == null ? '—' : joint.toFixed(1)} / 5</div>
+              </div>
             </div>
 
-            <div class="rating-blocks">
-              ${renderRatingBlock(ep.id, 'one', 'novo', n1, d.pending?.one || d.one, d.noteOne || '', d.noteOne)}
-              ${renderRatingBlock(ep.id, 'two', 'arijit', n2, d.pending?.two || d.two, d.noteTwo || '', d.noteTwo)}
-              ${renderRatingBlock(ep.id, 'three', 'eric', n3, d.pending?.three || d.three, d.noteThree || '', d.noteThree)}
+            <div class="rating-stack">
+              <div class="rating-box one">
+                <div class="rating-label">${escapeHtml(state.names.one || 'Novo')}</div>
+                <div class="rating-value">${data.one ? `${data.one}/5` : '—'}</div>
+                <div class="star-row">${createStars(data.pending?.one || data.one, ep.id, 'one')}</div>
+                <button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="one">Submit ${escapeHtml(state.names.one || 'Novo')} rating</button>
+                <textarea data-person-note="${ep.id}-one" placeholder="${escapeHtml(state.names.one || 'Novo')} note...">${escapeHtml(data.noteOne || '')}</textarea>
+                <div class="button-row"><button class="secondary submit-note-btn" data-episode-id="${ep.id}" data-person="one">Submit ${escapeHtml(state.names.one || 'Novo')} note</button></div>
+                <div class="person-note-preview">Saved note: ${escapeHtml(data.noteOne || '—')}</div>
+              </div>
+
+              <div class="rating-box two">
+                <div class="rating-label">${escapeHtml(state.names.two || 'Arijit')}</div>
+                <div class="rating-value">${data.two ? `${data.two}/5` : '—'}</div>
+                <div class="star-row">${createStars(data.pending?.two || data.two, ep.id, 'two')}</div>
+                <button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="two">Submit ${escapeHtml(state.names.two || 'Arijit')} rating</button>
+                <textarea data-person-note="${ep.id}-two" placeholder="${escapeHtml(state.names.two || 'Arijit')} note...">${escapeHtml(data.noteTwo || '')}</textarea>
+                <div class="button-row"><button class="secondary submit-note-btn" data-episode-id="${ep.id}" data-person="two">Submit ${escapeHtml(state.names.two || 'Arijit')} note</button></div>
+                <div class="person-note-preview">Saved note: ${escapeHtml(data.noteTwo || '—')}</div>
+              </div>
+
+              <div class="rating-box three">
+                <div class="rating-label">${escapeHtml(state.names.three || 'Eric')}</div>
+                <div class="rating-value">${data.three ? `${data.three}/5` : '—'}</div>
+                <div class="star-row">${createStars(data.pending?.three || data.three, ep.id, 'three')}</div>
+                <button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="three">Submit ${escapeHtml(state.names.three || 'Eric')} rating</button>
+                <textarea data-person-note="${ep.id}-three" placeholder="${escapeHtml(state.names.three || 'Eric')} note...">${escapeHtml(data.noteThree || '')}</textarea>
+                <div class="button-row"><button class="secondary submit-note-btn" data-episode-id="${ep.id}" data-person="three">Submit ${escapeHtml(state.names.three || 'Eric')} note</button></div>
+                <div class="person-note-preview">Saved note: ${escapeHtml(data.noteThree || '—')}</div>
+              </div>
             </div>
 
-            <div class="ep-footer">
-              <span class="spread-badge">${dis >= 0 ? `Spread: ${dis.toFixed(1)}★` : 'Rate 2+ to compare'}</span>
-              <button class="btn-success btn-sm reset-episode-btn" data-episode-id="${ep.id}">Reset</button>
+            <div class="episode-actions">
+              <div class="note-text">${disagreement >= 0 ? `Rating spread: ${disagreement.toFixed(1)} stars` : 'Need at least 2 ratings to compare'}</div>
+              <div class="button-row">
+                <button class="success reset-episode-btn" data-episode-id="${ep.id}">Reset episode</button>
+              </div>
             </div>
           </article>
         `;
@@ -1273,13 +911,12 @@
     }
 
     function renderAll() {
-      document.getElementById('personOneName').value = state.names.one;
-      document.getElementById('personTwoName').value = state.names.two;
-      document.getElementById('personThreeName').value = state.names.three;
-
+      personOneNameInput.value = state.names.one;
+      personTwoNameInput.value = state.names.two;
+      personThreeNameInput.value = state.names.three;
+      renderWatchControls();
       renderStats();
-      renderArcListInto(document.getElementById('arcList'));
-      renderArcListInto(document.getElementById('mobileArcList'));
+      renderArcList();
       renderEpisodes();
       saveState();
     }
@@ -1291,10 +928,8 @@
           const person = star.dataset.person;
           const value = Number(star.dataset.value);
           const data = getEpisodeData(id);
-
           if (!data.pending) data.pending = {};
           data.pending[person] = value;
-
           renderAll();
         });
       });
@@ -1304,12 +939,9 @@
           const id = btn.dataset.episodeId;
           const person = btn.dataset.person;
           const data = getEpisodeData(id);
-
           if (!data.pending || !data.pending[person]) return;
-
           data[person] = data.pending[person];
           delete data.pending[person];
-
           await syncState();
           renderAll();
         });
@@ -1322,11 +954,9 @@
           const data = getEpisodeData(id);
           const textarea = document.querySelector(`[data-person-note="${id}-${person}"]`);
           const value = textarea.value.trim();
-
           if (person === 'one') data.noteOne = value;
           if (person === 'two') data.noteTwo = value;
           if (person === 'three') data.noteThree = value;
-
           await syncState();
           renderAll();
         });
@@ -1334,14 +964,8 @@
 
       document.querySelectorAll('.reset-episode-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-          state.ratings[btn.dataset.episodeId] = {
-            one: 0,
-            two: 0,
-            three: 0,
-            noteOne: '',
-            noteTwo: '',
-            noteThree: ''
-          };
+          const id = btn.dataset.episodeId;
+          state.ratings[id] = { one: 0, two: 0, three: 0, noteOne: '', noteTwo: '', noteThree: '' };
           await syncState();
           renderAll();
         });
@@ -1350,65 +974,62 @@
 
     async function syncState() {
       saveState();
-
-      if (liveMode && roomRef && setDocFn && serverTimestampFn) {
-        await setDocFn(roomRef, { state, updatedAt: serverTimestampFn() }, { merge: true });
+      if (liveMode && roomRef) {
+        await setDoc(roomRef, { state, updatedAt: serverTimestamp() }, { merge: true });
       }
     }
 
-    async function connectLiveSync() {
-      if (!db) {
-        setStatus('error', 'Firebase unavailable');
-        alert('Firebase could not load. Ratings are saved locally only.');
-        return;
-      }
+    async function setCurrentEpisode(number, shouldScroll = true) {
+      state.currentEpisode = clampEpisodeNumber(number);
+      selectedArcId = getArcForEpisode(state.currentEpisode).id;
+      await syncState();
+      renderAll();
+      if (shouldScroll) requestAnimationFrame(() => scrollToEpisode(state.currentEpisode));
+    }
 
-      const roomId = document.getElementById('roomId').value.trim();
+    async function connectLiveSync() {
+      const roomId = roomIdInput.value.trim();
       if (!roomId) {
-        setStatus('error', 'No room ID');
+        setStatus('error', 'Missing room ID');
+        alert('Enter a room ID first.');
         return;
       }
 
       try {
         if (unsubscribe) unsubscribe();
-
-        roomRef = docFn(db, 'narutoRooms', roomId);
+        roomRef = doc(db, 'narutoRooms', roomId);
         liveMode = true;
         saveRoomId();
 
-        const existing = await getDocFn(roomRef);
+        const existing = await getDoc(roomRef);
         if (!existing.exists()) {
-          await setDocFn(roomRef, { state, updatedAt: serverTimestampFn() });
+          await setDoc(roomRef, { state, updatedAt: serverTimestamp() });
         }
 
-        unsubscribe = onSnapshotFn(
-          roomRef,
-          snap => {
-            const remote = snap.data()?.state;
-            if (!remote) return;
+        unsubscribe = onSnapshot(roomRef, (snap) => {
+          const remote = snap.data()?.state;
+          if (!remote) return;
+          state = {
+            names: {
+              one: remote?.names?.one || 'Novo',
+              two: remote?.names?.two || 'Arijit',
+              three: remote?.names?.three || 'Eric'
+            },
+            currentEpisode: Number.isFinite(remote?.currentEpisode) ? remote.currentEpisode : 1,
+            ratings: remote?.ratings || {}
+          };
+          renderAll();
+        }, (error) => {
+          console.error(error);
+          setStatus('error', 'Sync error');
+        });
 
-            state = {
-              names: {
-                one: remote?.names?.one || 'Novo',
-                two: remote?.names?.two || 'Arijit',
-                three: remote?.names?.three || 'Eric'
-              },
-              ratings: remote?.ratings || {}
-            };
-
-            renderAll();
-          },
-          err => {
-            console.error(err);
-            setStatus('error', 'Sync error');
-          }
-        );
-
-        setStatus('connected', `Live: ${roomId}`);
-      } catch (err) {
-        console.error(err);
+        setStatus('connected', `Live sync: ${roomId}`);
+      } catch (error) {
+        console.error(error);
         liveMode = false;
         setStatus('error', 'Failed to connect');
+        alert('Could not connect. Check your Firestore rules.');
       }
     }
 
@@ -1425,68 +1046,55 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'naruto-ratings.json';
+      a.download = 'naruto-shared-ratings.json';
       a.click();
       URL.revokeObjectURL(url);
     }
 
     async function clearAllRatings() {
-      if (!confirm('Clear every saved rating and note?')) return;
+      const ok = confirm('Clear every saved rating and note?');
+      if (!ok) return;
       state.ratings = {};
       await syncState();
       renderAll();
     }
 
-    document.getElementById('searchInput').addEventListener('input', renderAll);
-    document.getElementById('searchInputMobile').addEventListener('input', renderAll);
-    document.getElementById('sortMode').addEventListener('change', renderAll);
-    document.getElementById('sortModeMobile').addEventListener('change', renderAll);
-    document.getElementById('filterMode').addEventListener('change', renderAll);
-    document.getElementById('filterModeMobile').addEventListener('change', renderAll);
+    searchInput.addEventListener('input', renderAll);
+    sortMode.addEventListener('change', renderAll);
+    filterMode.addEventListener('change', renderAll);
 
-    ['personOneName', 'personTwoName', 'personThreeName'].forEach((id, i) => {
-      document.getElementById(id).addEventListener('input', async e => {
-        const key = ['one', 'two', 'three'][i];
-        state.names[key] = e.target.value || ['Novo', 'Arijit', 'Eric'][i];
-        await syncState();
-        renderAll();
-      });
-    });
-
-    document.getElementById('exportBtn').addEventListener('click', exportRatings);
-    document.getElementById('clearBtn').addEventListener('click', clearAllRatings);
-    document.getElementById('firstArcBtn').addEventListener('click', () => {
-      selectedArcId = ARC_DEFS[0].id;
+    personOneNameInput.addEventListener('input', async () => {
+      state.names.one = personOneNameInput.value || 'Novo';
+      await syncState();
       renderAll();
     });
-    document.getElementById('lastArcBtn').addEventListener('click', () => {
-      selectedArcId = ARC_DEFS[ARC_DEFS.length - 1].id;
+    personTwoNameInput.addEventListener('input', async () => {
+      state.names.two = personTwoNameInput.value || 'Arijit';
+      await syncState();
       renderAll();
     });
-    document.getElementById('connectBtn').addEventListener('click', connectLiveSync);
-    document.getElementById('disconnectBtn').addEventListener('click', disconnectLiveSync);
-    document.getElementById('mobileNavTrigger').addEventListener('click', () => {
-      document.getElementById('mobileOverlay').classList.add('open');
-    });
-    document.getElementById('mobileOverlayClose').addEventListener('click', () => {
-      document.getElementById('mobileOverlay').classList.remove('open');
-    });
-    document.getElementById('mobileOverlay').addEventListener('click', e => {
-      if (e.target === document.getElementById('mobileOverlay')) {
-        document.getElementById('mobileOverlay').classList.remove('open');
-      }
-    });
-
-    async function initApp() {
-      updateMobileFiltersVisibility();
-      loadRoomId();
-      loadRealEpisodeTitles();
+    personThreeNameInput.addEventListener('input', async () => {
+      state.names.three = personThreeNameInput.value || 'Eric';
+      await syncState();
       renderAll();
-      await initFirebase();
-      console.log('Episodes loaded:', episodes.length);
-    }
+    });
 
-    initApp();
+    exportBtn.addEventListener('click', exportRatings);
+    clearBtn.addEventListener('click', clearAllRatings);
+    firstArcBtn.addEventListener('click', () => { selectedArcId = ARC_DEFS[0].id; renderAll(); });
+    lastArcBtn.addEventListener('click', () => { selectedArcId = ARC_DEFS[ARC_DEFS.length - 1].id; renderAll(); });
+    goEpisodeBtn.addEventListener('click', async () => { await setCurrentEpisode(currentEpisodeInput.value, true); });
+    markWatchedBtn.addEventListener('click', async () => { await setCurrentEpisode((state.currentEpisode || 1) + 1, true); });
+    prevEpisodeBtn.addEventListener('click', async () => { await setCurrentEpisode((state.currentEpisode || 1) - 1, true); });
+    nextEpisodeBtn.addEventListener('click', async () => { await setCurrentEpisode((state.currentEpisode || 1) + 1, true); });
+    connectBtn.addEventListener('click', connectLiveSync);
+    disconnectBtn.addEventListener('click', disconnectLiveSync);
+
+    loadRoomId();
+    await loadRealEpisodeTitles();
+    state.currentEpisode = clampEpisodeNumber(state.currentEpisode || 1);
+    renderAll();
+    requestAnimationFrame(() => scrollToEpisode(state.currentEpisode));
   </script>
 </body>
 </html>
