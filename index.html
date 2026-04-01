@@ -7,8 +7,6 @@
   <style>
     :root {
       --bg: #0d1120;
-      --panel: rgba(255,255,255,0.06);
-      --panel-2: rgba(255,255,255,0.04);
       --text: #f4f6ff;
       --muted: #b7bfd8;
       --accent: #ff8a00;
@@ -17,6 +15,13 @@
       --danger: #ff7b7b;
       --border: rgba(255,255,255,0.1);
       --shadow: 0 18px 50px rgba(0,0,0,0.35);
+
+      --novo-bg: rgba(255, 90, 90, 0.12);
+      --novo-border: rgba(255, 120, 120, 0.28);
+      --arijit-bg: rgba(90, 140, 255, 0.12);
+      --arijit-border: rgba(120, 165, 255, 0.28);
+      --eric-bg: rgba(49, 210, 141, 0.12);
+      --eric-border: rgba(90, 230, 165, 0.28);
     }
 
     * { box-sizing: border-box; }
@@ -120,9 +125,10 @@
 
     .setup {
       margin-top: 16px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      display: flex;
       gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
     .main-grid {
@@ -284,8 +290,22 @@
     .rating-box {
       padding: 11px;
       border-radius: 16px;
-      background: rgba(255,255,255,0.05);
       border: 1px solid var(--border);
+    }
+
+    .rating-box.one {
+      background: var(--novo-bg);
+      border-color: var(--novo-border);
+    }
+
+    .rating-box.two {
+      background: var(--arijit-bg);
+      border-color: var(--arijit-border);
+    }
+
+    .rating-box.three {
+      background: var(--eric-bg);
+      border-color: var(--eric-border);
     }
 
     .rating-label {
@@ -304,6 +324,7 @@
       display: flex;
       gap: 4px;
       flex-wrap: wrap;
+      margin-bottom: 8px;
     }
 
     .star {
@@ -330,6 +351,14 @@
       flex-wrap: wrap;
     }
 
+    .person-note-preview {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-top: 8px;
+      min-height: 18px;
+    }
+
     textarea { min-height: 76px; resize: vertical; }
 
     .empty-state,
@@ -350,13 +379,12 @@
     }
 
     @media (max-width: 1200px) {
-      .setup { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
       .main-grid { grid-template-columns: 1fr; }
       .controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
     }
 
     @media (max-width: 720px) {
-      .stats, .setup, .controls, .episodes-grid { grid-template-columns: 1fr; }
+      .stats, .controls, .episodes-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -367,7 +395,7 @@
         <div>
           <h1>Naruto Shared Ratings Hub</h1>
           <p class="sub">
-            Real episode titles and numbers, grouped by arc, with shared live ratings for Novo, Arijit, and Eric. Paste your Firebase details once, use the same room ID on every device, and everyone stays synced.
+            Real episode titles and numbers, grouped by arc, with shared live ratings for Novo, Arijit, and Eric. Firebase is now built straight in, so everyone just uses the same site and same room ID.
           </p>
         </div>
         <div class="badge">Real titles + shared sync</div>
@@ -397,10 +425,6 @@
       </div>
 
       <div class="setup">
-        <input type="text" id="apiKey" placeholder="Firebase API key" />
-        <input type="text" id="authDomain" placeholder="Auth domain" />
-        <input type="text" id="projectId" placeholder="Project ID" />
-        <input type="text" id="appId" placeholder="App ID" />
         <input type="text" id="roomId" placeholder="Shared room ID (e.g. naruto-boys)" />
         <div class="button-row">
           <button class="primary" id="connectBtn">Connect live sync</button>
@@ -468,7 +492,7 @@
           </div>
 
           <p class="footer-note">
-            Notes and ratings save locally by default, or live-sync through Firestore once connected.
+            Ratings and person-specific notes save locally by default, or live-sync through Firestore once connected.
           </p>
         </div>
       </main>
@@ -477,10 +501,25 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
     import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
 
-    const STORAGE_KEY = 'naruto-shared-ratings-v1';
-    const FIREBASE_SETTINGS_KEY = 'naruto-shared-firebase-settings';
+    const firebaseConfig = {
+      apiKey: 'AIzaSyD0CAmT_PLEIv85NwrdzE7DhwFfg6eg7WE',
+      authDomain: 'naruto-838cf.firebaseapp.com',
+      projectId: 'naruto-838cf',
+      storageBucket: 'naruto-838cf.firebasestorage.app',
+      messagingSenderId: '280791678540',
+      appId: '1:280791678540:web:b60294f53eeb782505bee9',
+      measurementId: 'G-EDH87N1C4W'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch {}
+    const db = getFirestore(app);
+
+    const STORAGE_KEY = 'naruto-shared-ratings-v2';
+    const ROOM_KEY = 'naruto-shared-room';
 
     const ARC_DEFS = [
       { id: 'prologue', name: 'Prologue — Land of Waves', start: 1, end: 19, description: 'Team 7’s first real mission, Zabuza, Haku, and the first emotional core of the series.' },
@@ -502,8 +541,6 @@
     let state = loadState();
     let selectedArcId = ARC_DEFS[0].id;
     let episodes = [];
-    let firebaseApp = null;
-    let db = null;
     let roomRef = null;
     let unsubscribe = null;
     let liveMode = false;
@@ -532,10 +569,6 @@
     const clearBtn = document.getElementById('clearBtn');
     const firstArcBtn = document.getElementById('firstArcBtn');
     const lastArcBtn = document.getElementById('lastArcBtn');
-    const apiKeyInput = document.getElementById('apiKey');
-    const authDomainInput = document.getElementById('authDomain');
-    const projectIdInput = document.getElementById('projectId');
-    const appIdInput = document.getElementById('appId');
     const roomIdInput = document.getElementById('roomId');
     const connectBtn = document.getElementById('connectBtn');
     const disconnectBtn = document.getElementById('disconnectBtn');
@@ -564,27 +597,12 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    function saveFirebaseSettings() {
-      localStorage.setItem(FIREBASE_SETTINGS_KEY, JSON.stringify({
-        apiKey: apiKeyInput.value.trim(),
-        authDomain: authDomainInput.value.trim(),
-        projectId: projectIdInput.value.trim(),
-        appId: appIdInput.value.trim(),
-        roomId: roomIdInput.value.trim()
-      }));
+    function loadRoomId() {
+      roomIdInput.value = localStorage.getItem(ROOM_KEY) || 'naruto-boys';
     }
 
-    function loadFirebaseSettings() {
-      try {
-        const raw = localStorage.getItem(FIREBASE_SETTINGS_KEY);
-        if (!raw) return;
-        const s = JSON.parse(raw);
-        apiKeyInput.value = s.apiKey || '';
-        authDomainInput.value = s.authDomain || '';
-        projectIdInput.value = s.projectId || '';
-        appIdInput.value = s.appId || '';
-        roomIdInput.value = s.roomId || '';
-      } catch {}
+    function saveRoomId() {
+      localStorage.setItem(ROOM_KEY, roomIdInput.value.trim());
     }
 
     function setStatus(type, text) {
@@ -595,7 +613,12 @@
     }
 
     function getEpisodeData(id) {
-      if (!state.ratings[id]) state.ratings[id] = { one: 0, two: 0, three: 0, notes: '' };
+      if (!state.ratings[id]) {
+        state.ratings[id] = {
+          one: 0, two: 0, three: 0,
+          noteOne: '', noteTwo: '', noteThree: ''
+        };
+      }
       return state.ratings[id];
     }
 
@@ -780,32 +803,43 @@
             </div>
 
             <div class="rating-stack">
-              <div class="rating-box">
+              <div class="rating-box one">
                 <div class="rating-label">${escapeHtml(state.names.one || 'Novo')}</div>
                 <div class="rating-value">${data.one ? `${data.one}/5` : '—'}</div>
-                <div class="star-row">${createStars(data.pending?.one || data.one, ep.id, 'one')}</div><button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="one">Submit ${escapeHtml(state.names.one || 'Novo')}</button></div>
+                <div class="star-row">${createStars(data.pending?.one || data.one, ep.id, 'one')}</div>
+                <button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="one">Submit ${escapeHtml(state.names.one || 'Novo')} rating</button>
+                <textarea data-person-note="${ep.id}-one" placeholder="${escapeHtml(state.names.one || 'Novo')} note...">${escapeHtml(data.pendingNotes?.one ?? data.noteOne ?? '')}</textarea>
+                <div class="button-row"><button class="secondary submit-note-btn" data-episode-id="${ep.id}" data-person="one">Submit ${escapeHtml(state.names.one || 'Novo')} note</button></div>
+                <div class="person-note-preview">Saved note: ${escapeHtml(data.noteOne || '—')}</div>
               </div>
-              <div class="rating-box">
+
+              <div class="rating-box two">
                 <div class="rating-label">${escapeHtml(state.names.two || 'Arijit')}</div>
                 <div class="rating-value">${data.two ? `${data.two}/5` : '—'}</div>
-                <div class="star-row">${createStars(data.pending?.two || data.two, ep.id, 'two')}</div><button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="two">Submit ${escapeHtml(state.names.two || 'Arijit')}</button></div>
+                <div class="star-row">${createStars(data.pending?.two || data.two, ep.id, 'two')}</div>
+                <button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="two">Submit ${escapeHtml(state.names.two || 'Arijit')} rating</button>
+                <textarea data-person-note="${ep.id}-two" placeholder="${escapeHtml(state.names.two || 'Arijit')} note...">${escapeHtml(data.pendingNotes?.two ?? data.noteTwo ?? '')}</textarea>
+                <div class="button-row"><button class="secondary submit-note-btn" data-episode-id="${ep.id}" data-person="two">Submit ${escapeHtml(state.names.two || 'Arijit')} note</button></div>
+                <div class="person-note-preview">Saved note: ${escapeHtml(data.noteTwo || '—')}</div>
               </div>
-              <div class="rating-box">
+
+              <div class="rating-box three">
                 <div class="rating-label">${escapeHtml(state.names.three || 'Eric')}</div>
                 <div class="rating-value">${data.three ? `${data.three}/5` : '—'}</div>
-                <div class="star-row">${createStars(data.pending?.three || data.three, ep.id, 'three')}</div><button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="three">Submit ${escapeHtml(state.names.three || 'Eric')}</button></div>
+                <div class="star-row">${createStars(data.pending?.three || data.three, ep.id, 'three')}</div>
+                <button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="three">Submit ${escapeHtml(state.names.three || 'Eric')} rating</button>
+                <textarea data-person-note="${ep.id}-three" placeholder="${escapeHtml(state.names.three || 'Eric')} note...">${escapeHtml(data.pendingNotes?.three ?? data.noteThree ?? '')}</textarea>
+                <div class="button-row"><button class="secondary submit-note-btn" data-episode-id="${ep.id}" data-person="three">Submit ${escapeHtml(state.names.three || 'Eric')} note</button></div>
+                <div class="person-note-preview">Saved note: ${escapeHtml(data.noteThree || '—')}</div>
               </div>
             </div>
 
             <div class="episode-actions">
               <div class="note-text">${disagreement >= 0 ? `Rating spread: ${disagreement.toFixed(1)} stars` : 'Need at least 2 ratings to compare'}</div>
               <div class="button-row">
-                <button class="secondary save-note-btn" data-episode-id="${ep.id}">Save notes</button>
                 <button class="success reset-episode-btn" data-episode-id="${ep.id}">Reset episode</button>
               </div>
             </div>
-
-            <textarea data-episode-note="${ep.id}" placeholder="Notes, funniest scene, best fight, emotional bits...">${escapeHtml(data.notes)}</textarea>
           </article>
         `;
       }).join('');
@@ -849,21 +883,28 @@
         });
       });
 
-      document.querySelectorAll('.save-note-btn').forEach(btn => {
+      document.querySelectorAll('.submit-note-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           const id = btn.dataset.episodeId;
-          const textarea = document.querySelector(`[data-episode-note="${id}"]`);
-          getEpisodeData(id).notes = textarea.value.trim();
+          const person = btn.dataset.person;
+          const data = getEpisodeData(id);
+          const textarea = document.querySelector(`[data-person-note="${id}-${person}"]`);
+          const value = textarea.value.trim();
+          if (person === 'one') data.noteOne = value;
+          if (person === 'two') data.noteTwo = value;
+          if (person === 'three') data.noteThree = value;
           await syncState();
-          btn.textContent = 'Saved';
-          setTimeout(() => btn.textContent = 'Save notes', 900);
+          renderAll();
         });
       });
 
       document.querySelectorAll('.reset-episode-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
           const id = btn.dataset.episodeId;
-          state.ratings[id] = { one: 0, two: 0, three: 0, notes: '' };
+          state.ratings[id] = {
+            one: 0, two: 0, three: 0,
+            noteOne: '', noteTwo: '', noteThree: ''
+          };
           await syncState();
           renderAll();
         });
@@ -878,27 +919,18 @@
     }
 
     async function connectLiveSync() {
-      const config = {
-        apiKey: apiKeyInput.value.trim(),
-        authDomain: authDomainInput.value.trim(),
-        projectId: projectIdInput.value.trim(),
-        appId: appIdInput.value.trim()
-      };
       const roomId = roomIdInput.value.trim();
-
-      if (!config.apiKey || !config.authDomain || !config.projectId || !config.appId || !roomId) {
-        setStatus('error', 'Missing Firebase details');
-        alert('Fill in API key, auth domain, project ID, app ID, and room ID first.');
+      if (!roomId) {
+        setStatus('error', 'Missing room ID');
+        alert('Enter a room ID first.');
         return;
       }
 
       try {
         if (unsubscribe) unsubscribe();
-        firebaseApp = initializeApp(config, `naruto-shared-${Date.now()}`);
-        db = getFirestore(firebaseApp);
         roomRef = doc(db, 'narutoRooms', roomId);
         liveMode = true;
-        saveFirebaseSettings();
+        saveRoomId();
 
         const existing = await getDoc(roomRef);
         if (!existing.exists()) {
@@ -927,15 +959,13 @@
         console.error(error);
         liveMode = false;
         setStatus('error', 'Failed to connect');
-        alert('Could not connect. Check your Firebase config and Firestore rules.');
+        alert('Could not connect. Check your Firestore rules.');
       }
     }
 
     function disconnectLiveSync() {
       if (unsubscribe) unsubscribe();
       unsubscribe = null;
-      firebaseApp = null;
-      db = null;
       roomRef = null;
       liveMode = false;
       setStatus('local', 'Local mode');
@@ -986,7 +1016,7 @@
     connectBtn.addEventListener('click', connectLiveSync);
     disconnectBtn.addEventListener('click', disconnectLiveSync);
 
-    loadFirebaseSettings();
+    loadRoomId();
     await loadRealEpisodeTitles();
     renderAll();
   </script>
