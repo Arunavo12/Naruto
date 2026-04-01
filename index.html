@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naruto Shared Ratings Hub</title>
+  <style>
+    :root {
+      --bg: #0d1120;
+      --panel: rgba(255,255,255,0.06);
+      --panel-2: rgba(255,255,255,0.04);
+      --text: #f4f6ff;
+      --muted: #b7bfd8;
+      --accent: #ff8a00;
+      --accent-2: #ffd166;
+      --good: #31d28d;
+      --danger: #ff7b7b;
+      --border: rgba(255,255,255,0.1);
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top right, rgba(255,138,0,0.16), transparent 24%),
+        radial-gradient(circle at top left, rgba(255,209,102,0.08), transparent 20%),
+        linear-gradient(180deg, #0b0e18 0%, #11162a 100%);
+    }
+
+    .wrap {
+      max-width: 1550px;
+      margin: 0 auto;
+      padding: 26px 18px 60px;
+    }
+
+    .hero,
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(255,138,0,0.14), rgba(255,255,255,0.04));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero { padding: 24px; }
+    .panel { overflow: hidden; }
+
+    h1, h2, h3 { margin: 0; line-height: 1.1; }
+    h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); margin-bottom: 10px; }
+    h2 { font-size: clamp(1.15rem, 2vw, 1.55rem); }
+
+    .sub, .small {
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .top-row, .panel-head, .episodes-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .badge, .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge { color: var(--accent-2); }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-2);
+    }
+
+    .dot.connected { background: var(--good); }
+    .dot.error { background: var(--danger); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(10,14,27,0.48);
+      border: 1px solid var(--border);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: clamp(1.2rem, 2.5vw, 1.9rem);
+      font-weight: 800;
+    }
+
+    .setup {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .panel-inner,
+    .episodes-wrap { padding: 18px; }
+
+    .stack { display: grid; gap: 12px; }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 13px;
+      outline: none;
+      font: inherit;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      border-radius: 14px;
+      padding: 10px 13px;
+      transition: 0.18s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .primary {
+      background: linear-gradient(90deg, var(--accent), #ff6a00);
+      color: white;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .success {
+      background: rgba(49,210,141,0.14);
+      color: #8ef0bf;
+      border: 1px solid rgba(49,210,141,0.3);
+    }
+
+    .danger {
+      background: rgba(255,100,100,0.14);
+      color: #ffbdbd;
+      border: 1px solid rgba(255,100,100,0.28);
+    }
+
+    .arc-list {
+      display: grid;
+      gap: 10px;
+      max-height: 72vh;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .arc-button {
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .arc-button:hover,
+    .arc-button.active {
+      transform: translateY(-1px);
+      background: linear-gradient(145deg, rgba(255,138,0,0.18), rgba(255,255,255,0.08));
+      border-color: rgba(255,209,102,0.35);
+    }
+
+    .arc-name { font-weight: 800; margin-bottom: 4px; }
+    .arc-meta { color: var(--muted); font-size: 0.88rem; }
+
+    .episodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+    }
+
+    .episode-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .episode-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .episode-number {
+      color: var(--accent-2);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .episode-title {
+      font-weight: 800;
+      font-size: 1rem;
+      line-height: 1.35;
+      margin-top: 4px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .rating-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rating-box {
+      padding: 11px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+    }
+
+    .rating-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .rating-value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .star-row {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .star {
+      background: transparent;
+      border: none;
+      color: #6d748d;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      transition: transform 0.12s ease;
+    }
+
+    .star:hover { transform: scale(1.08); }
+    .star.filled { color: #ffd166; }
+
+    .note-text { color: var(--muted); font-size: 0.9rem; }
+
+    .episode-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    textarea { min-height: 76px; resize: vertical; }
+
+    .empty-state,
+    .loading-state {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1200px) {
+      .setup { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+      .main-grid { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .stats, .setup, .controls, .episodes-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="top-row">
+        <div>
+          <h1>Naruto Shared Ratings Hub</h1>
+          <p class="sub">
+            Real episode titles and numbers, grouped by arc, with shared live ratings for Novo, Arijit, and Eric. Paste your Firebase details once, use the same room ID on every device, and everyone stays synced.
+          </p>
+        </div>
+        <div class="badge">Real titles + shared sync</div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Episodes Loaded</div>
+          <div class="stat-value" id="loadedCount">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Episodes Rated</div>
+          <div class="stat-value" id="ratedCount">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label" id="personOneAverageLabel">Novo Average</div>
+          <div class="stat-value" id="personOneAverage">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label" id="personTwoAverageLabel">Arijit Average</div>
+          <div class="stat-value" id="personTwoAverage">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label" id="personThreeAverageLabel">Eric Average</div>
+          <div class="stat-value" id="personThreeAverage">—</div>
+        </div>
+      </div>
+
+      <div class="setup">
+        <input type="text" id="apiKey" placeholder="Firebase API key" />
+        <input type="text" id="authDomain" placeholder="Auth domain" />
+        <input type="text" id="projectId" placeholder="Project ID" />
+        <input type="text" id="appId" placeholder="App ID" />
+        <input type="text" id="roomId" placeholder="Shared room ID (e.g. naruto-boys)" />
+        <div class="button-row">
+          <button class="primary" id="connectBtn">Connect live sync</button>
+          <button class="secondary" id="disconnectBtn">Local mode</button>
+        </div>
+        <div class="status-pill"><span class="dot" id="statusDot"></span><span id="statusText">Local mode</span></div>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <aside class="panel">
+        <div class="panel-inner stack">
+          <div class="panel-head">
+            <h2>Arcs</h2>
+            <span class="small" id="arcCountLabel">0 arcs</span>
+          </div>
+
+          <input id="searchInput" type="text" placeholder="Search episode or arc..." />
+
+          <select id="sortMode">
+            <option value="episode-asc">Sort: episode number ↑</option>
+            <option value="episode-desc">Sort: episode number ↓</option>
+            <option value="avg-desc">Sort: highest average rating</option>
+            <option value="one-desc">Sort: highest Novo rating</option>
+            <option value="two-desc">Sort: highest Arijit rating</option>
+            <option value="three-desc">Sort: highest Eric rating</option>
+          </select>
+
+          <select id="filterMode">
+            <option value="all">Show: all episodes</option>
+            <option value="rated">Show: rated only</option>
+            <option value="unrated">Show: unrated only</option>
+            <option value="disagreed">Show: biggest disagreements</option>
+          </select>
+
+          <div class="button-row">
+            <button class="secondary" id="firstArcBtn">First arc</button>
+            <button class="secondary" id="lastArcBtn">Last arc</button>
+          </div>
+
+          <div class="arc-list" id="arcList"></div>
+        </div>
+      </aside>
+
+      <main class="panel">
+        <div class="episodes-wrap">
+          <div class="controls">
+            <input type="text" id="personOneName" placeholder="Person 1 name" />
+            <input type="text" id="personTwoName" placeholder="Person 2 name" />
+            <input type="text" id="personThreeName" placeholder="Person 3 name" />
+            <button class="secondary" id="exportBtn">Export JSON</button>
+            <button class="danger" id="clearBtn">Clear ratings</button>
+          </div>
+
+          <div class="episodes-head">
+            <div>
+              <h2 id="currentArcTitle">Loading episodes…</h2>
+              <p class="small" id="currentArcSummary">The page will pull the original Naruto episode titles automatically.</p>
+            </div>
+            <div class="small" id="visibleCountLabel">0 episodes visible</div>
+          </div>
+
+          <div id="episodesContainer" class="episodes-grid">
+            <div class="loading-state">Loading real Naruto episode titles…</div>
+          </div>
+
+          <p class="footer-note">
+            Notes and ratings save locally by default, or live-sync through Firestore once connected.
+          </p>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
+
+    const STORAGE_KEY = 'naruto-shared-ratings-v1';
+    const FIREBASE_SETTINGS_KEY = 'naruto-shared-firebase-settings';
+
+    const ARC_DEFS = [
+      { id: 'prologue', name: 'Prologue — Land of Waves', start: 1, end: 19, description: 'Team 7’s first real mission, Zabuza, Haku, and the first emotional core of the series.' },
+      { id: 'chunin-exams', name: 'Chunin Exams', start: 20, end: 67, description: 'Written exam, Forest of Death, prelims, training, and the tournament chaos.' },
+      { id: 'konoha-crush', name: 'Konoha Crush', start: 68, end: 80, description: 'The invasion arc with Gaara, Orochimaru, and the Third Hokage showdown.' },
+      { id: 'search-for-tsunade', name: 'Search for Tsunade', start: 81, end: 100, description: 'Jiraiya, Tsunade, Kabuto, and Naruto’s Rasengan development.' },
+      { id: 'special-missions', name: 'Special & Tea Country', start: 101, end: 106, description: 'The Kakashi face episode and the Land of Tea escort mission.' },
+      { id: 'sasuke-recovery', name: 'Sasuke Recovery Mission', start: 107, end: 135, description: 'The Sound Four fights and Naruto vs Sasuke.' },
+      { id: 'filler-missions-1', name: 'Filler Missions I', start: 136, end: 160, description: 'Early filler run after the major canon climax.' },
+      { id: 'filler-missions-2', name: 'Filler Missions II', start: 161, end: 185, description: 'More side missions and village-level stories.' },
+      { id: 'filler-missions-3', name: 'Filler Missions III', start: 186, end: 220, description: 'Final stretch of original Naruto before Shippuden.' }
+    ];
+
+    const defaultState = {
+      names: { one: 'Novo', two: 'Arijit', three: 'Eric' },
+      ratings: {}
+    };
+
+    let state = loadState();
+    let selectedArcId = ARC_DEFS[0].id;
+    let episodes = [];
+    let firebaseApp = null;
+    let db = null;
+    let roomRef = null;
+    let unsubscribe = null;
+    let liveMode = false;
+
+    const loadedCount = document.getElementById('loadedCount');
+    const ratedCount = document.getElementById('ratedCount');
+    const personOneAverage = document.getElementById('personOneAverage');
+    const personTwoAverage = document.getElementById('personTwoAverage');
+    const personThreeAverage = document.getElementById('personThreeAverage');
+    const personOneAverageLabel = document.getElementById('personOneAverageLabel');
+    const personTwoAverageLabel = document.getElementById('personTwoAverageLabel');
+    const personThreeAverageLabel = document.getElementById('personThreeAverageLabel');
+    const arcCountLabel = document.getElementById('arcCountLabel');
+    const searchInput = document.getElementById('searchInput');
+    const sortMode = document.getElementById('sortMode');
+    const filterMode = document.getElementById('filterMode');
+    const arcList = document.getElementById('arcList');
+    const currentArcTitle = document.getElementById('currentArcTitle');
+    const currentArcSummary = document.getElementById('currentArcSummary');
+    const visibleCountLabel = document.getElementById('visibleCountLabel');
+    const episodesContainer = document.getElementById('episodesContainer');
+    const personOneNameInput = document.getElementById('personOneName');
+    const personTwoNameInput = document.getElementById('personTwoName');
+    const personThreeNameInput = document.getElementById('personThreeName');
+    const exportBtn = document.getElementById('exportBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const firstArcBtn = document.getElementById('firstArcBtn');
+    const lastArcBtn = document.getElementById('lastArcBtn');
+    const apiKeyInput = document.getElementById('apiKey');
+    const authDomainInput = document.getElementById('authDomain');
+    const projectIdInput = document.getElementById('projectId');
+    const appIdInput = document.getElementById('appId');
+    const roomIdInput = document.getElementById('roomId');
+    const connectBtn = document.getElementById('connectBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(defaultState);
+        const parsed = JSON.parse(raw);
+        return {
+          names: {
+            one: parsed?.names?.one || 'Novo',
+            two: parsed?.names?.two || 'Arijit',
+            three: parsed?.names?.three || 'Eric'
+          },
+          ratings: parsed?.ratings || {}
+        };
+      } catch {
+        return structuredClone(defaultState);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function saveFirebaseSettings() {
+      localStorage.setItem(FIREBASE_SETTINGS_KEY, JSON.stringify({
+        apiKey: apiKeyInput.value.trim(),
+        authDomain: authDomainInput.value.trim(),
+        projectId: projectIdInput.value.trim(),
+        appId: appIdInput.value.trim(),
+        roomId: roomIdInput.value.trim()
+      }));
+    }
+
+    function loadFirebaseSettings() {
+      try {
+        const raw = localStorage.getItem(FIREBASE_SETTINGS_KEY);
+        if (!raw) return;
+        const s = JSON.parse(raw);
+        apiKeyInput.value = s.apiKey || '';
+        authDomainInput.value = s.authDomain || '';
+        projectIdInput.value = s.projectId || '';
+        appIdInput.value = s.appId || '';
+        roomIdInput.value = s.roomId || '';
+      } catch {}
+    }
+
+    function setStatus(type, text) {
+      statusText.textContent = text;
+      statusDot.className = 'dot';
+      if (type === 'connected') statusDot.classList.add('connected');
+      if (type === 'error') statusDot.classList.add('error');
+    }
+
+    function getEpisodeData(id) {
+      if (!state.ratings[id]) state.ratings[id] = { one: 0, two: 0, three: 0, notes: '' };
+      return state.ratings[id];
+    }
+
+    function average(values) {
+      const valid = values.filter(v => typeof v === 'number' && v > 0);
+      if (!valid.length) return null;
+      return valid.reduce((a, b) => a + b, 0) / valid.length;
+    }
+
+    function formatAvg(value) {
+      return value == null ? '—' : value.toFixed(1);
+    }
+
+    function getArcById(id) {
+      return ARC_DEFS.find(a => a.id === id);
+    }
+
+    function getEpisodesForArc(arcId) {
+      const arc = getArcById(arcId);
+      return episodes.filter(ep => ep.number >= arc.start && ep.number <= arc.end).map(ep => ({ ...ep, arcId, arcName: arc.name }));
+    }
+
+    function getJoint(epId) {
+      const d = getEpisodeData(epId);
+      return average([d.one, d.two, d.three]);
+    }
+
+    function getDisagreement(epId) {
+      const d = getEpisodeData(epId);
+      const valid = [d.one, d.two, d.three].filter(v => v > 0);
+      if (valid.length < 2) return -1;
+      return Math.max(...valid) - Math.min(...valid);
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    async function loadRealEpisodeTitles() {
+      try {
+        const res = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=List_of_Naruto_episodes&prop=text&format=json&origin=*');
+        const data = await res.json();
+        const html = data?.parse?.text?.['*'];
+        if (!html) throw new Error('No episode HTML found');
+
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const rows = [...doc.querySelectorAll('tr')];
+        const found = [];
+
+        for (const row of rows) {
+          const text = row.textContent.replace(/\s+/g, ' ').trim();
+          const match = text.match(/^(\d+)\s+(\d+)\s+"([^"]+)"/);
+          if (!match) continue;
+          const number = Number(match[1]);
+          const title = match[3].trim();
+          if (!Number.isFinite(number) || !title) continue;
+          if (!found.some(ep => ep.number === number)) {
+            found.push({ id: `ep-${number}`, number, title });
+          }
+        }
+
+        found.sort((a, b) => a.number - b.number);
+        if (found.length < 200) throw new Error(`Only found ${found.length} titles`);
+        episodes = found.slice(0, 220);
+      } catch (error) {
+        console.error(error);
+        episodes = Array.from({ length: 220 }, (_, i) => ({ id: `ep-${i + 1}`, number: i + 1, title: `Naruto Episode ${i + 1}` }));
+        setStatus('error', 'Using fallback titles');
+      }
+    }
+
+    function renderStats() {
+      loadedCount.textContent = episodes.length;
+      const ratedEpisodes = episodes.filter(ep => {
+        const d = getEpisodeData(ep.id);
+        return d.one > 0 || d.two > 0 || d.three > 0;
+      });
+
+      personOneAverageLabel.textContent = `${state.names.one || 'Novo'} Average`;
+      personTwoAverageLabel.textContent = `${state.names.two || 'Arijit'} Average`;
+      personThreeAverageLabel.textContent = `${state.names.three || 'Eric'} Average`;
+
+      ratedCount.textContent = ratedEpisodes.length;
+      personOneAverage.textContent = formatAvg(average(episodes.map(ep => getEpisodeData(ep.id).one)));
+      personTwoAverage.textContent = formatAvg(average(episodes.map(ep => getEpisodeData(ep.id).two)));
+      personThreeAverage.textContent = formatAvg(average(episodes.map(ep => getEpisodeData(ep.id).three)));
+      arcCountLabel.textContent = `${ARC_DEFS.length} arcs`;
+    }
+
+    function renderArcList() {
+      arcList.innerHTML = ARC_DEFS.map(arc => {
+        const arcEpisodes = getEpisodesForArc(arc.id);
+        const ratedInArc = arcEpisodes.filter(ep => {
+          const d = getEpisodeData(ep.id);
+          return d.one > 0 || d.two > 0 || d.three > 0;
+        }).length;
+        return `
+          <button class="arc-button ${selectedArcId === arc.id ? 'active' : ''}" data-arc-id="${arc.id}">
+            <div class="arc-name">${arc.name}</div>
+            <div class="arc-meta">Episodes ${arc.start}–${arc.end} · ${arcEpisodes.length} eps · ${ratedInArc} rated</div>
+          </button>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.arc-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedArcId = btn.dataset.arcId;
+          renderAll();
+        });
+      });
+    }
+
+    function createStars(value, episodeId, person) {
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        html += `<button class="star ${i <= value ? 'filled' : ''}" data-episode-id="${episodeId}" data-person="${person}" data-value="${i}" title="${i} stars">★</button>`;
+      }
+      return html;
+    }
+
+    function filterEpisodes(list) {
+      const query = searchInput.value.trim().toLowerCase();
+      let result = list.filter(ep => {
+        const matchesSearch = !query || ep.title.toLowerCase().includes(query) || ep.arcName.toLowerCase().includes(query) || String(ep.number).includes(query);
+        if (!matchesSearch) return false;
+
+        const d = getEpisodeData(ep.id);
+        const isRated = d.one > 0 || d.two > 0 || d.three > 0;
+        const disagreed = getDisagreement(ep.id) > 0;
+
+        if (filterMode.value === 'rated') return isRated;
+        if (filterMode.value === 'unrated') return !isRated;
+        if (filterMode.value === 'disagreed') return disagreed;
+        return true;
+      });
+
+      result.sort((a, b) => {
+        if (sortMode.value === 'episode-asc') return a.number - b.number;
+        if (sortMode.value === 'episode-desc') return b.number - a.number;
+        if (sortMode.value === 'avg-desc') return (getJoint(b.id) ?? -1) - (getJoint(a.id) ?? -1);
+        if (sortMode.value === 'one-desc') return getEpisodeData(b.id).one - getEpisodeData(a.id).one;
+        if (sortMode.value === 'two-desc') return getEpisodeData(b.id).two - getEpisodeData(a.id).two;
+        if (sortMode.value === 'three-desc') return getEpisodeData(b.id).three - getEpisodeData(a.id).three;
+        return 0;
+      });
+
+      if (filterMode.value === 'disagreed') {
+        result.sort((a, b) => getDisagreement(b.id) - getDisagreement(a.id));
+      }
+      return result;
+    }
+
+    function renderEpisodes() {
+      const arc = getArcById(selectedArcId);
+      const visibleEpisodes = filterEpisodes(getEpisodesForArc(selectedArcId));
+      currentArcTitle.textContent = arc.name;
+      currentArcSummary.textContent = `${arc.description} Episodes ${arc.start}–${arc.end}.`;
+      visibleCountLabel.textContent = `${visibleEpisodes.length} episodes visible`;
+
+      if (!visibleEpisodes.length) {
+        episodesContainer.innerHTML = `<div class="empty-state">No episodes match your current search/filter in this arc.</div>`;
+        return;
+      }
+
+      episodesContainer.innerHTML = visibleEpisodes.map(ep => {
+        const data = getEpisodeData(ep.id);
+        const joint = getJoint(ep.id);
+        const disagreement = getDisagreement(ep.id);
+        return `
+          <article class="episode-card">
+            <div class="episode-top">
+              <div>
+                <div class="episode-number">Episode ${ep.number}</div>
+                <div class="episode-title">${escapeHtml(ep.title)}</div>
+              </div>
+              <div class="pill">Avg: ${joint == null ? '—' : joint.toFixed(1)} / 5</div>
+            </div>
+
+            <div class="rating-stack">
+              <div class="rating-box">
+                <div class="rating-label">${escapeHtml(state.names.one || 'Novo')}</div>
+                <div class="rating-value">${data.one ? `${data.one}/5` : '—'}</div>
+                <div class="star-row">${createStars(data.pending?.one || data.one, ep.id, 'one')}</div><button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="one">Submit ${escapeHtml(state.names.one || 'Novo')}</button></div>
+              </div>
+              <div class="rating-box">
+                <div class="rating-label">${escapeHtml(state.names.two || 'Arijit')}</div>
+                <div class="rating-value">${data.two ? `${data.two}/5` : '—'}</div>
+                <div class="star-row">${createStars(data.pending?.two || data.two, ep.id, 'two')}</div><button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="two">Submit ${escapeHtml(state.names.two || 'Arijit')}</button></div>
+              </div>
+              <div class="rating-box">
+                <div class="rating-label">${escapeHtml(state.names.three || 'Eric')}</div>
+                <div class="rating-value">${data.three ? `${data.three}/5` : '—'}</div>
+                <div class="star-row">${createStars(data.pending?.three || data.three, ep.id, 'three')}</div><button class="secondary submit-rating-btn" data-episode-id="${ep.id}" data-person="three">Submit ${escapeHtml(state.names.three || 'Eric')}</button></div>
+              </div>
+            </div>
+
+            <div class="episode-actions">
+              <div class="note-text">${disagreement >= 0 ? `Rating spread: ${disagreement.toFixed(1)} stars` : 'Need at least 2 ratings to compare'}</div>
+              <div class="button-row">
+                <button class="secondary save-note-btn" data-episode-id="${ep.id}">Save notes</button>
+                <button class="success reset-episode-btn" data-episode-id="${ep.id}">Reset episode</button>
+              </div>
+            </div>
+
+            <textarea data-episode-note="${ep.id}" placeholder="Notes, funniest scene, best fight, emotional bits...">${escapeHtml(data.notes)}</textarea>
+          </article>
+        `;
+      }).join('');
+
+      bindEpisodeEvents();
+    }
+
+    function renderAll() {
+      personOneNameInput.value = state.names.one;
+      personTwoNameInput.value = state.names.two;
+      personThreeNameInput.value = state.names.three;
+      renderStats();
+      renderArcList();
+      renderEpisodes();
+      saveState();
+    }
+
+    function bindEpisodeEvents() {
+      document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', () => {
+          const id = star.dataset.episodeId;
+          const person = star.dataset.person;
+          const value = Number(star.dataset.value);
+          const data = getEpisodeData(id);
+          if (!data.pending) data.pending = {};
+          data.pending[person] = value;
+          renderAll();
+        });
+      });
+
+      document.querySelectorAll('.submit-rating-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.episodeId;
+          const person = btn.dataset.person;
+          const data = getEpisodeData(id);
+          if (!data.pending || !data.pending[person]) return;
+          data[person] = data.pending[person];
+          delete data.pending[person];
+          await syncState();
+          renderAll();
+        });
+      });
+
+      document.querySelectorAll('.save-note-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.episodeId;
+          const textarea = document.querySelector(`[data-episode-note="${id}"]`);
+          getEpisodeData(id).notes = textarea.value.trim();
+          await syncState();
+          btn.textContent = 'Saved';
+          setTimeout(() => btn.textContent = 'Save notes', 900);
+        });
+      });
+
+      document.querySelectorAll('.reset-episode-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.episodeId;
+          state.ratings[id] = { one: 0, two: 0, three: 0, notes: '' };
+          await syncState();
+          renderAll();
+        });
+      });
+    }
+
+    async function syncState() {
+      saveState();
+      if (liveMode && roomRef) {
+        await setDoc(roomRef, { state, updatedAt: serverTimestamp() }, { merge: true });
+      }
+    }
+
+    async function connectLiveSync() {
+      const config = {
+        apiKey: apiKeyInput.value.trim(),
+        authDomain: authDomainInput.value.trim(),
+        projectId: projectIdInput.value.trim(),
+        appId: appIdInput.value.trim()
+      };
+      const roomId = roomIdInput.value.trim();
+
+      if (!config.apiKey || !config.authDomain || !config.projectId || !config.appId || !roomId) {
+        setStatus('error', 'Missing Firebase details');
+        alert('Fill in API key, auth domain, project ID, app ID, and room ID first.');
+        return;
+      }
+
+      try {
+        if (unsubscribe) unsubscribe();
+        firebaseApp = initializeApp(config, `naruto-shared-${Date.now()}`);
+        db = getFirestore(firebaseApp);
+        roomRef = doc(db, 'narutoRooms', roomId);
+        liveMode = true;
+        saveFirebaseSettings();
+
+        const existing = await getDoc(roomRef);
+        if (!existing.exists()) {
+          await setDoc(roomRef, { state, updatedAt: serverTimestamp() });
+        }
+
+        unsubscribe = onSnapshot(roomRef, (snap) => {
+          const remote = snap.data()?.state;
+          if (!remote) return;
+          state = {
+            names: {
+              one: remote?.names?.one || 'Novo',
+              two: remote?.names?.two || 'Arijit',
+              three: remote?.names?.three || 'Eric'
+            },
+            ratings: remote?.ratings || {}
+          };
+          renderAll();
+        }, (error) => {
+          console.error(error);
+          setStatus('error', 'Sync error');
+        });
+
+        setStatus('connected', `Live sync: ${roomId}`);
+      } catch (error) {
+        console.error(error);
+        liveMode = false;
+        setStatus('error', 'Failed to connect');
+        alert('Could not connect. Check your Firebase config and Firestore rules.');
+      }
+    }
+
+    function disconnectLiveSync() {
+      if (unsubscribe) unsubscribe();
+      unsubscribe = null;
+      firebaseApp = null;
+      db = null;
+      roomRef = null;
+      liveMode = false;
+      setStatus('local', 'Local mode');
+    }
+
+    function exportRatings() {
+      const blob = new Blob([JSON.stringify({ episodes, state }, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'naruto-shared-ratings.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function clearAllRatings() {
+      const ok = confirm('Clear every saved rating and note?');
+      if (!ok) return;
+      state.ratings = {};
+      await syncState();
+      renderAll();
+    }
+
+    searchInput.addEventListener('input', renderAll);
+    sortMode.addEventListener('change', renderAll);
+    filterMode.addEventListener('change', renderAll);
+
+    personOneNameInput.addEventListener('input', async () => {
+      state.names.one = personOneNameInput.value || 'Novo';
+      await syncState();
+      renderAll();
+    });
+    personTwoNameInput.addEventListener('input', async () => {
+      state.names.two = personTwoNameInput.value || 'Arijit';
+      await syncState();
+      renderAll();
+    });
+    personThreeNameInput.addEventListener('input', async () => {
+      state.names.three = personThreeNameInput.value || 'Eric';
+      await syncState();
+      renderAll();
+    });
+
+    exportBtn.addEventListener('click', exportRatings);
+    clearBtn.addEventListener('click', clearAllRatings);
+    firstArcBtn.addEventListener('click', () => { selectedArcId = ARC_DEFS[0].id; renderAll(); });
+    lastArcBtn.addEventListener('click', () => { selectedArcId = ARC_DEFS[ARC_DEFS.length - 1].id; renderAll(); });
+    connectBtn.addEventListener('click', connectLiveSync);
+    disconnectBtn.addEventListener('click', disconnectLiveSync);
+
+    loadFirebaseSettings();
+    await loadRealEpisodeTitles();
+    renderAll();
+  </script>
+</body>
+</html>
